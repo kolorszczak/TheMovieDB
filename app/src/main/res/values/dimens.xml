@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin4">4dp</dimen>
+    <dimen name="margin8">8dp</dimen>
+    <dimen name="margin16">16dp</dimen>
+    <dimen name="margin32">32dp</dimen>
+    <dimen name="margin64">64dp</dimen>
+
+    <dimen name="fontSize14">14sp</dimen>
+    <dimen name="fontSize18">18sp</dimen>
+    <dimen name="fontSize22">22sp</dimen>
+    <dimen name="fontSize36">36sp</dimen>
+
+    <dimen name="wrap_to_constraints">0dp</dimen>
+</resources>

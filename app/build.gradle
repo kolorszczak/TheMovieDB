@@ -1,0 +1,115 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion toolVersions.android.compileSdk
+    buildToolsVersion toolVersions.android.buildTools
+
+    defaultConfig {
+        applicationId "pl.mihau.moviedb"
+        minSdkVersion 19
+        targetSdkVersion toolVersions.android.targetSdk
+        versionCode 100
+        versionName "1.0.0"
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), new File("${project.projectDir}/proguard-project.txt")
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+
+        buildConfigField 'String', 'SERVER_URL', '"https://api.themoviedb.org/"'
+    }
+
+    signingConfigs {
+        moviedb_signing_config {
+            storeFile file("${rootDir}/moviedb.keystore")
+            storePassword "123456"
+            keyAlias "android"
+            keyPassword "123456"
+        }
+    }
+
+    buildTypes {
+        rc {
+            signingConfig android.signingConfigs.moviedb_signing_config
+            debuggable false
+            shrinkResources true
+            jniDebuggable false
+            minifyEnabled true
+        }
+
+        dev {
+            signingConfig android.signingConfigs.moviedb_signing_config
+            applicationIdSuffix ".debug"
+            debuggable true
+            jniDebuggable true
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    androidExtensions {
+        experimental = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+
+        kotlinOptions {
+            jvmTarget = toolVersions.kotlin_jvm_target
+        }
+    }
+
+    dependencies {
+        //Kotlin
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:${toolVersions.android.kotlin}"
+
+        //Support
+        implementation "androidx.appcompat:appcompat:${libVersions.android.androidx}"
+        implementation "androidx.core:core-ktx:${libVersions.android.androidx}"
+        implementation "androidx.recyclerview:recyclerview:${libVersions.android.recyclerview}"
+        implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${libVersions.android.aac}"
+        implementation "androidx.lifecycle:lifecycle-livedata:${libVersions.android.aac}"
+        implementation "com.android.support.constraint:constraint-layout:${libVersions.android.constraint_layout}"
+
+        //Rx
+        implementation "io.reactivex.rxjava2:rxandroid:${libVersions.rx.rxandroid}"
+        implementation "io.reactivex.rxjava2:rxjava:${libVersions.rx.rxjava}"
+        implementation "io.reactivex.rxjava2:rxkotlin:${libVersions.rx.rxkotlin}"
+        implementation "com.github.tbruyelle:rxpermissions:${libVersions.rx.rxpermissions}"
+
+        //Helpers
+        implementation "com.jakewharton.timber:timber:${libVersions.core.timber}"
+        implementation "com.android.support:multidex:${libVersions.android.multidex}"
+        implementation "com.jakewharton:process-phoenix:${libVersions.android.process_phoenix}"
+        kapt "com.android.databinding:compiler:${libVersions.core.databinding}"
+
+        //Koin
+        implementation "org.koin:koin-android:${libVersions.core.koin}"
+        implementation "org.koin:koin-androidx-scope:${libVersions.core.koin}"
+        implementation "org.koin:koin-androidx-viewmodel:${libVersions.core.koin}"
+        implementation "org.koin:koin-androidx-ext:${libVersions.core.koin}"
+
+        //UI
+        implementation "com.github.bumptech.glide:glide:${libVersions.glide}"
+        kapt "com.github.bumptech.glide:compiler:${libVersions.glide}"
+
+        // Architectural Components
+        implementation "android.arch.lifecycle:extensions:${libVersions.lifecycle.arch_component}"
+        kapt "android.arch.lifecycle:compiler:${libVersions.lifecycle.arch_component}"
+        implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:${libVersions.lifecycle.arch_saved_state}"
+
+        //Web
+        implementation "com.squareup.retrofit2:retrofit:${libVersions.retrofit}"
+        implementation "com.squareup.retrofit2:converter-gson:${libVersions.retrofit}"
+        implementation "com.squareup.retrofit2:adapter-rxjava2:${libVersions.retrofit}"
+        implementation "com.squareup.okhttp3:okhttp:${libVersions.okhttp}"
+        implementation "com.squareup.okhttp3:logging-interceptor:${libVersions.okhttp}"
+        implementation "com.google.code.gson:gson:${libVersions.gson}"
+    }
+}

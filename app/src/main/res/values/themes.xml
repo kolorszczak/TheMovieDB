@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SolidTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="toolbarStyle">@style/ToolbarTheme</item>
+    </style>
+
+    <style name="AppTheme" parent="SolidTheme">
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+        <item name="android:windowBackground">@color/darkBlue</item>
+    </style>
+
+    <style name="SplashTheme" parent="SolidTheme">
+        <item name="android:windowBackground">@color/darkBlue</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/lightGreen</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="android:tint">@color/white</item>
+        <item name="android:fontFamily">@font/lato_regular</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="contentInsetStart">@dimen/margin32</item>
+        <item name="titleMargin">0dp</item>
+    </style>
+</resources>

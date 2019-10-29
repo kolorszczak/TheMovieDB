@@ -1,0 +1,45 @@
+ext {
+    toolVersions = [
+            wrapper                     : '5.1.1',
+            kotlin_jvm_target           : '1.8',
+            android: [
+                    compileSdk          : 29,
+                    targetSdk           : 29,
+                    minSdk              : 16,
+                    gradlePlugin        : '3.5.1',
+                    buildTools          : '29.0.0',
+                    kotlin              : '1.3.21'
+            ]
+    ]
+    libVersions = [
+            core: [
+                    koin                : '2.1.0-alpha-1',
+                    databinding         : '3.0.2',
+                    timber              : '4.7.1'
+            ],
+            rx: [
+                    rxjava              : '2.1.14',
+                    rxandroid           : '2.1.0',
+                    rxkotlin            : '2.1.0',
+                    rxpermissions       : '0.10.2',
+                    lifecycle           : '2.2.2'
+
+            ],
+            android: [
+                    androidx            : '1.1.0',
+                    recyclerview        : '1.0.0',
+                    aac                 : '2.1.0',
+                    multidex            : '1.0.3',
+                    process_phoenix     : '2.0.0',
+                    constraint_layout   : '1.1.3'
+            ],
+            lifecycle: [
+                    arch_component      : '2.1.0',
+                    arch_saved_state    : '1.0.0-alpha01'
+            ],
+            okhttp                      : '3.10.0',
+            retrofit                    : '2.3.0',
+            gson                        : '2.8.6',
+            glide                       : '4.8.0',
+    ]
+}
