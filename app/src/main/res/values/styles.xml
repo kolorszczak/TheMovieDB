@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="LatoBlackTextAppearance">
+        <item name="font">@font/lato_black</item>
+    </style>
+
+    <style name="LataRegularTextAppearance">
+        <item name="font">@font/lato_regular</item>
+    </style>
+</resources>

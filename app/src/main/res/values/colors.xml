@@ -5,9 +5,9 @@
     <color name="colorAccent">@color/black</color>
 
     <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
+    <color name="black">#141414</color>
 
-    <color name="darkBlue">#09141D</color>
+    <color name="darkBlue">#000913</color>
     <color name="lightBlue">#2196F3</color>
     <color name="lightGreen">#8BC34A</color>
 </resources>

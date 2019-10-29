@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">The Movie DB</string>
+
+    <string name="missing_permissions_title">Brak wystarczających uprawnień</string>
+    <string name="missing_permissions_message">Aplikacja nie ma wystarczających uprawnień do poprawnego funkcjonowania.</string>
+    <string name="missing_permissions_settings">Przejdź do ustawień aplikacji</string>
+    <string name="error_btn_ok">OK</string>
 </resources>
