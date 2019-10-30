@@ -25,7 +25,7 @@ abstract class StatefulViewModel<STATE : State, EVENT : Event>(
     private var stateMachine: StateMachine<STATE, EVENT>? = null
 
     private val _state = MutableLiveData<STATE>()
-    protected val state: LiveData<STATE> = _state
+    val state: LiveData<STATE> = _state
 
     abstract val stateGraph: StateMachine.Graph<STATE, EVENT>
 

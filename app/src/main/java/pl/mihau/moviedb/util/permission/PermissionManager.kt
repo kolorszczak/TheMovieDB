@@ -4,7 +4,7 @@ import com.tbruyelle.rxpermissions2.Permission
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Observable
 import pl.mihau.moviedb.common.Permissions
-import pl.mihau.moviedb.common.activity.BaseActivity
+import pl.mihau.moviedb.common.view.BaseActivity
 
 class PermissionManager(private val activity: BaseActivity) {
 

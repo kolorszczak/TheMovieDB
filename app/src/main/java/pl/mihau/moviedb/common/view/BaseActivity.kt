@@ -1,4 +1,4 @@
-package pl.mihau.moviedb.common.activity
+package pl.mihau.moviedb.common.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

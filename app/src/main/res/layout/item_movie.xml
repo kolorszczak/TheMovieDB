@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/posterImageView"
+            android:layout_width="@dimen/image_big_width"
+            android:layout_height="@dimen/wrap_to_constraints"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/titleTextView"
+            app:layout_constraintDimensionRatio="2:3"
+            tools:src="@drawable/im_sample" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="@dimen/wrap_to_constraints"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin16"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:textColor="@color/white"
+            android:maxLines="1"
+            android:singleLine="true"
+            app:fontFamily="@font/lato_black"
+            app:layout_constraintBottom_toTopOf="@id/descriptionTextView"
+            app:layout_constraintStart_toStartOf="@id/posterImageView"
+            app:layout_constraintEnd_toEndOf="@id/posterImageView"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@id/posterImageView"
+            tools:text="Aladdin" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="@dimen/wrap_to_constraints"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin4"
+            android:layout_marginTop="@dimen/margin4"
+            android:ellipsize="end"
+            android:textColor="@color/white"
+            android:gravity="start"
+            android:maxLines="2"
+            app:fontFamily="@font/lato_regular"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/posterImageView"
+            app:layout_constraintStart_toStartOf="@id/posterImageView"
+            app:layout_constraintTop_toBottomOf="@id/titleTextView"
+            tools:text="A kindhearted street urchin named Aladdin embarks on a magical adventure after find" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,7 +1,7 @@
 package pl.mihau.moviedb.util.di
 
 import org.koin.dsl.module
-import pl.mihau.moviedb.common.activity.BaseActivity
+import pl.mihau.moviedb.common.view.BaseActivity
 import pl.mihau.moviedb.util.application.ProcessManager
 import pl.mihau.moviedb.util.permission.PermissionManager
 

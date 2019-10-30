@@ -97,6 +97,8 @@ android {
 
         //UI
         implementation "com.mikepenz:fastadapter:${libVersions.android.fastadapter}"
+        implementation "com.mikepenz:fastadapter-extensions-diff:${libVersions.android.fastadapter}"
+        implementation "com.mikepenz:fastadapter-extensions-scroll:${libVersions.android.fastadapter}"
         implementation "com.github.bumptech.glide:glide:${libVersions.glide}"
         kapt "com.github.bumptech.glide:compiler:${libVersions.glide}"
         implementation "com.google.android.material:material:${libVersions.android.material}"

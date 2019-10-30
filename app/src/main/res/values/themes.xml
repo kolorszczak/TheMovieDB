@@ -17,7 +17,7 @@
     <style name="SplashTheme" parent="SolidTheme">
         <item name="android:windowBackground">@color/darkBlue</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">@color/lightGreen</item>
+        <item name="android:textColorSecondary">@color/gold</item>
     </style>
 
     <style name="ToolbarTheme" parent="@style/Widget.AppCompat.Toolbar">

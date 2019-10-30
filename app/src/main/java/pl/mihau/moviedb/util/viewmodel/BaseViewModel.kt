@@ -8,7 +8,7 @@ import pl.mihau.moviedb.util.rx.TransformersCompletable
 import pl.mihau.moviedb.util.rx.TransformersObservable
 import pl.mihau.moviedb.util.rx.TransformersSingle
 
-abstract class BaseViewModel : ViewModel(), KoinComponent {
+abstract class BaseViewModel : ViewModel(), KoinComponent, DisposablesOwner {
 
     protected val transformersSingle by lazy { get<TransformersSingle>() }
 
@@ -16,10 +16,10 @@ abstract class BaseViewModel : ViewModel(), KoinComponent {
 
     protected val transformersObservable by lazy { get<TransformersObservable>() }
 
-    protected val compositeDisposable = CompositeDisposable()
+    override val disposables = CompositeDisposable()
 
     override fun onCleared() {
-        compositeDisposable.clear()
+        disposables.clear()
         super.onCleared()
     }
 }

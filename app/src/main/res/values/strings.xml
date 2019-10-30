@@ -5,4 +5,8 @@
     <string name="missing_permissions_message">Aplikacja nie ma wystarczających uprawnień do poprawnego funkcjonowania.</string>
     <string name="missing_permissions_settings">Przejdź do ustawień aplikacji</string>
     <string name="error_btn_ok">OK</string>
+
+    <string name="title_now_playing">Now playing</string>
+    <string name="title_upcoming">Upcoming</string>
+    <string name="title_popular">Popular</string>
 </resources>

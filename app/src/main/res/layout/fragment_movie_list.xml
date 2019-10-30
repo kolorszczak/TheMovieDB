@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="pl.mihau.moviedb.list.viewmodel.MovieListViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="@dimen/margin32" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="@dimen/margin32" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/nowPlaying"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="nowPlayingTitle,nowPlayingList"
+                tools:visibility="visible" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/upcoming"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="upcomingTitle,upcomingList"
+                tools:visibility="visible" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/popular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="popularTitle,popularList"
+                tools:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/nowPlayingTitle"
+                android:layout_width="@dimen/wrap_to_constraints"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin32"
+                android:layout_marginBottom="@dimen/margin16"
+                android:text="@string/title_now_playing"
+                android:textColor="@color/white"
+                android:textSize="@dimen/fontSize36"
+                app:fontFamily="@font/lato_regular"
+                app:layout_constraintBottom_toTopOf="@id/nowPlayingList"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/nowPlayingList"
+                android:layout_width="@dimen/wrap_to_constraints"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:scrollbars="none"
+                app:layout_constraintBottom_toTopOf="@id/upcomingTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nowPlayingTitle" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/upcomingTitle"
+                android:layout_width="@dimen/wrap_to_constraints"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin32"
+                android:layout_marginBottom="@dimen/margin16"
+                android:text="@string/title_upcoming"
+                android:textColor="@color/white"
+                android:textSize="@dimen/fontSize36"
+                app:fontFamily="@font/lato_regular"
+                app:layout_constraintBottom_toTopOf="@id/upcomingList"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/nowPlayingList" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/upcomingList"
+                android:layout_width="@dimen/wrap_to_constraints"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:scrollbars="none"
+                app:layout_constraintBottom_toTopOf="@id/popularTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/upcomingTitle" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/popularTitle"
+                android:layout_width="@dimen/wrap_to_constraints"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin32"
+                android:layout_marginBottom="@dimen/margin16"
+                android:text="@string/title_popular"
+                android:textColor="@color/white"
+                android:textSize="@dimen/fontSize36"
+                app:fontFamily="@font/lato_regular"
+                app:layout_constraintBottom_toTopOf="@id/popularList"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/upcomingList" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/popularList"
+                android:layout_width="@dimen/wrap_to_constraints"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin16"
+                android:overScrollMode="never"
+                android:scrollbars="none"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/popularTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

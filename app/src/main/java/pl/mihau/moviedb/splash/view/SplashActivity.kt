@@ -6,9 +6,9 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import pl.mihau.moviedb.R
-import pl.mihau.moviedb.common.activity.BaseActivity
+import pl.mihau.moviedb.common.view.BaseActivity
+import pl.mihau.moviedb.dashboard.view.DashboardActivity
 import pl.mihau.moviedb.databinding.ActivitySplashBinding
-import pl.mihau.moviedb.movielist.view.MovieListActivity
 import pl.mihau.moviedb.splash.viewmodel.SplashViewModel
 import pl.mihau.moviedb.util.databinding.contentView
 import pl.mihau.moviedb.util.extension.startActivityWithFinish
@@ -27,7 +27,7 @@ class SplashActivity : BaseActivity() {
             it.viewModel = viewModel
         }
 
-        viewModel.currentState.observe(this, Observer {
+        viewModel.state.observe(this, Observer {
             when (it) {
                 SplashViewModel.SplashState.Dashboard -> openDashboard()
                 SplashViewModel.SplashState.Error -> processManager.relaunchFromStartup()
@@ -37,9 +37,7 @@ class SplashActivity : BaseActivity() {
         checkPermissions()
     }
 
-    private fun openDashboard() {
-        TODO("open dashboard")
-    }
+    private fun openDashboard() = startActivityWithFinish(DashboardActivity.intent(this))
 
     private fun checkPermissions() {
         when {

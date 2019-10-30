@@ -2,7 +2,7 @@ package pl.mihau.moviedb.util.application
 
 import android.content.Intent
 import com.jakewharton.processphoenix.ProcessPhoenix
-import pl.mihau.moviedb.common.activity.BaseActivity
+import pl.mihau.moviedb.common.view.BaseActivity
 import pl.mihau.moviedb.splash.view.SplashActivity
 import pl.mihau.moviedb.util.extension.requireContext
 import timber.log.Timber
