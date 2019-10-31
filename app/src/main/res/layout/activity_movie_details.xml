@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="isFavorite"
+            type="Boolean" />
         <variable
             name="movie"
             type="pl.mihau.moviedb.details.model.MovieDetails" />
@@ -42,6 +44,20 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0"
             tools:src="@drawable/im_sample" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/heart_big"
+            android:src="@{isFavorite ? @drawable/ic_favorite : @drawable/ic_favorite_border}"
+            style="@style/Image"
+            app:tint="@color/white"
+            tools:src="@drawable/ic_favorite"
+            android:id="@+id/favoritesImageView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintDimensionRatio="1:1"
+            android:padding="@dimen/margin8"
+            android:alpha="0.7"
+            android:layout_height="@dimen/heart_big" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/title"

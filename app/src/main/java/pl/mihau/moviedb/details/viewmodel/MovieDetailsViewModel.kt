@@ -14,17 +14,10 @@ class MovieDetailsViewModel(private val movieDBRepository: MovieDBRepository) :
     ) {
 
     sealed class DetailsState : State {
-        @Parcelize
-        object Empty : DetailsState()
-
-        @Parcelize
-        object Loading : DetailsState()
-
-        @Parcelize
-        data class DataLoaded(val data: MovieDetails) : DetailsState()
-
-        @Parcelize
-        object Error : DetailsState()
+        @Parcelize object Empty : DetailsState()
+        @Parcelize object Loading : DetailsState()
+        @Parcelize data class DataLoaded(val data: MovieDetails) : DetailsState()
+        @Parcelize object Error : DetailsState()
     }
 
     sealed class DetailsEvent : Event {

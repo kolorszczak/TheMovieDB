@@ -6,8 +6,14 @@ object Strings {
     const val empty = ""
 }
 
+object Codes {
+    const val MOVIE_DETAILS = 1
+}
+
 object Keys {
+    const val FAVORITES = "key_FAVORITES"
     const val MOVIE = "key_MOVIE"
+    const val SHARED_PREFS = "key_SHARED_PREFS"
 }
 
 object Values {

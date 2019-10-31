@@ -1,17 +1,25 @@
 package pl.mihau.moviedb.list.view
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener
 import kotlinx.android.synthetic.main.fragment_movie_list.*
+import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import pl.mihau.moviedb.R
+import pl.mihau.moviedb.common.Codes
 import pl.mihau.moviedb.common.view.BaseFragment
 import pl.mihau.moviedb.dashboard.view.DashboardActivity
 import pl.mihau.moviedb.databinding.FragmentMovieListBinding
@@ -21,6 +29,7 @@ import pl.mihau.moviedb.list.model.MovieListType
 import pl.mihau.moviedb.list.model.MovieListType.*
 import pl.mihau.moviedb.list.ui.item.MovieListItem
 import pl.mihau.moviedb.list.viewmodel.MovieListViewModel
+import pl.mihau.moviedb.util.application.FavoritesManager
 import pl.mihau.moviedb.util.databinding.inflate
 import pl.mihau.moviedb.util.extension.fastAdapter
 import pl.mihau.moviedb.util.extension.setVisibility
@@ -47,6 +56,8 @@ class MovieListFragment : BaseFragment<DashboardActivity>() {
     private val popularItemAdapter: ItemAdapter<MovieListItem> = ItemAdapter()
     private val popularAdapter: GenericFastAdapter =
         fastAdapter(popularItemAdapter, popularFooterAdapter)
+
+    private val adapters = listOf(nowPlayingAdapter, upcomingAdapter, popularAdapter)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,17 +96,25 @@ class MovieListFragment : BaseFragment<DashboardActivity>() {
         init()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == Codes.MOVIE_DETAILS) {
+            adapters.forEach { it.notifyAdapterDataSetChanged() }
+        }
+    }
+
     private fun init() {
         viewModel.invokeAction(MovieListViewModel.MovieEvent.Action.Init)
     }
 
     private fun setupList(listType: MovieListType, data: List<Movie>) {
+        val favoritesManager = get<FavoritesManager>()
+
         when (listType) {
             NOW_PLAYING -> nowPlayingItemAdapter
             UPCOMING -> upcomingItemAdapter
             POPULAR -> popularItemAdapter
         }.apply {
-            data.forEach { add(MovieListItem(it)) }
+            data.forEach { add(MovieListItem(it, favoritesManager)) }
         }
 
         setupSectionViews(listType, true)
@@ -150,8 +169,7 @@ class MovieListFragment : BaseFragment<DashboardActivity>() {
         popularList.adapter = popularAdapter
 
         listOf(nowPlayingList, upcomingList, popularList).forEach {
-            it.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            it.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             it.addItemDecoration(HorizontalSpaceItemDecoration(R.dimen.margin32))
         }
     }
@@ -193,12 +211,27 @@ class MovieListFragment : BaseFragment<DashboardActivity>() {
             adapter.onClickListener = { _, _, item, _ ->
                 when (item) {
                     is MovieListItem -> {
-                        startActivity(MovieDetailsActivity.intent(requireContext(), item.movie))
+                        startActivityForResult(MovieDetailsActivity.intent(requireContext(), item.movie), Codes.MOVIE_DETAILS)
                         true
                     }
                     else -> false
                 }
             }
+
+            adapter.addEventHook(object : ClickEventHook<GenericItem>() {
+                override fun onBind(viewHolder: RecyclerView.ViewHolder): View? = (viewHolder as? MovieListItem.ViewHolder)?.run { this.binding.favoritesImageView }
+
+                override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<GenericItem>, item: GenericItem) {
+                    when (item) {
+                        is MovieListItem -> toggleFavorite(item)
+                    }
+                }
+            })
         }
+    }
+
+    private fun toggleFavorite(movie: MovieListItem) {
+        get<FavoritesManager>().toggleFavorite(movie.movie.id)
+        adapters.forEach { it.notifyAdapterDataSetChanged() }
     }
 }

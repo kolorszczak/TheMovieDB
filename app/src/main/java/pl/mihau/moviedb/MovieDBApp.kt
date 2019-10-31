@@ -32,7 +32,6 @@ class MovieDBApp : Application() {
                 repositoryModule,
                 rxModule,
                 restModule,
-                storageModule,
                 applicationUtilsModule
             )
         }

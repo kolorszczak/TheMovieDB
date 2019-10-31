@@ -3,6 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="isFavorite"
+            type="Boolean" />
+        <variable
+            name="movie"
+            type="pl.mihau.moviedb.list.model.Movie" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -18,7 +27,22 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:image="@{movie.posterPath}"
             tools:src="@drawable/im_sample" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/heart_small"
+            android:src="@{isFavorite ? @drawable/ic_favorite : @drawable/ic_favorite_border}"
+            style="@style/Image"
+            app:tint="@color/white"
+            tools:src="@drawable/ic_favorite"
+            android:id="@+id/favoritesImageView"
+            android:layout_margin="@dimen/margin8"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            android:alpha="0.7"
+            android:layout_height="@dimen/heart_small" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/titleTextView"
@@ -29,6 +53,7 @@
             android:textSize="@dimen/fontSize14"
             app:layout_constraintBottom_toTopOf="@id/descriptionTextView"
             app:layout_constraintEnd_toEndOf="@id/posterImageView"
+            app:label="@{movie.title}"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@id/posterImageView"
             app:layout_constraintTop_toBottomOf="@id/posterImageView"
@@ -42,6 +67,7 @@
             android:layout_marginTop="@dimen/margin4"
             android:layout_marginBottom="@dimen/margin4"
             android:maxLines="2"
+            app:label="@{movie.overview}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/posterImageView"
             app:layout_constraintStart_toStartOf="@id/posterImageView"

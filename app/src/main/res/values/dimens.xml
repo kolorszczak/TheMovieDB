@@ -16,4 +16,6 @@
     <dimen name="image_small_width">50dp</dimen>
     <dimen name="image_big_width">150dp</dimen>
     <dimen name="divider_height">1dp</dimen>
+    <dimen name="heart_big">48dp</dimen>
+    <dimen name="heart_small">18dp</dimen>
 </resources>
