@@ -59,7 +59,6 @@ class MovieListFragment : BaseFragment<DashboardActivity>() {
 
         binding.also {
             it.lifecycleOwner = this
-            it.viewModel = viewModel
         }
 
         viewModel.state.observe(this, Observer {
@@ -145,18 +144,14 @@ class MovieListFragment : BaseFragment<DashboardActivity>() {
         }
     }
 
-    private fun handleLoading(listType: MovieListType) {
-        setProgressVisibility(listType, true)
-        setupSectionViews(listType, true)
-    }
-
     private fun setupRecyclerViews() {
         nowPlayingList.adapter = nowPlayingAdapter
         upcomingList.adapter = upcomingAdapter
         popularList.adapter = popularAdapter
 
         listOf(nowPlayingList, upcomingList, popularList).forEach {
-            it.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            it.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             it.addItemDecoration(HorizontalSpaceItemDecoration(R.dimen.margin32))
         }
     }

@@ -4,7 +4,6 @@ import androidx.appcompat.widget.SearchView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-
 object RxSearchObservable {
 
     fun fromView(searchView: SearchView): Observable<String> {

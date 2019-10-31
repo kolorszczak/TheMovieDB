@@ -24,7 +24,7 @@ enum class DashboardTab(
     companion object {
 
         fun forPosition(position: Int): DashboardTab {
-            for (tab: DashboardTab in DashboardTab.values()) {
+            for (tab: DashboardTab in values()) {
                 if (tab.position == position) {
                     return tab
                 }

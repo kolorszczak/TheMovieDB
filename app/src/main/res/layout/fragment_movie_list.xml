@@ -3,13 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="pl.mihau.moviedb.list.viewmodel.MovieListViewModel" />
-    </data>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -64,9 +57,7 @@
                 android:layout_marginTop="@dimen/margin32"
                 android:layout_marginBottom="@dimen/margin16"
                 android:text="@string/title_now_playing"
-                android:textColor="@color/white"
-                android:textSize="@dimen/fontSize36"
-                app:fontFamily="@font/lato_regular"
+                style="@style/TextAppearance.Title"
                 app:layout_constraintBottom_toTopOf="@id/nowPlayingList"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"

@@ -13,19 +13,17 @@ import kotlinx.android.synthetic.main.fragment_movie_search.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import pl.mihau.moviedb.R
 import pl.mihau.moviedb.common.Strings.empty
-import pl.mihau.moviedb.common.Values
 import pl.mihau.moviedb.common.view.BaseFragment
 import pl.mihau.moviedb.dashboard.view.DashboardActivity
 import pl.mihau.moviedb.databinding.FragmentMovieSearchBinding
 import pl.mihau.moviedb.details.view.MovieDetailsActivity
-import pl.mihau.moviedb.list.ui.item.MovieListItem
-import pl.mihau.moviedb.util.list.item.ProgressListItem
 import pl.mihau.moviedb.search.ui.item.MovieSmallListItem
 import pl.mihau.moviedb.search.viewmodel.MovieSearchViewModel
 import pl.mihau.moviedb.util.databinding.inflate
 import pl.mihau.moviedb.util.extension.fastAdapter
 import pl.mihau.moviedb.util.list.RxSearchObservable
 import pl.mihau.moviedb.util.list.VerticalSpaceItemDecoration
+import pl.mihau.moviedb.util.list.item.ProgressListItem
 import java.util.concurrent.TimeUnit
 
 class MovieSearchFragment : BaseFragment<DashboardActivity>() {
@@ -46,7 +44,6 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
 
         binding.also {
             it.lifecycleOwner = this
-            it.viewModel = viewModel
         }
 
         viewModel.state.observe(this, Observer {

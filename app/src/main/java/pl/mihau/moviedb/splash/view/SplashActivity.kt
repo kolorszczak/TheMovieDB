@@ -24,7 +24,6 @@ class SplashActivity : BaseActivity() {
 
         binding.also {
             it.lifecycleOwner = this
-            it.viewModel = viewModel
         }
 
         viewModel.state.observe(this, Observer {

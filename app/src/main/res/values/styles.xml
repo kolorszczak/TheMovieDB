@@ -1,6 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="TextAppearance">
+        <item name="android:textColor">@color/white</item>
+        <item name="fontFamily">@font/lato_regular</item>
+        <item name="android:textSize">@dimen/fontSize14</item>
+    </style>
+
+    <style name="TextAppearance.H1" parent="TextAppearance">
+        <item name="android:textSize">@dimen/fontSize44</item>
+        <item name="fontFamily">@font/lato_black</item>
+    </style>
+
+    <style name="TextAppearance.H2" parent="TextAppearance">
+        <item name="android:textSize">@dimen/fontSize22</item>
+        <item name="fontFamily">@font/lato_black</item>
+    </style>
+
+    <style name="TextAppearance.H3" parent="TextAppearance"></style>
+
+    <style name="TextAppearance.Title" parent="TextAppearance">
+        <item name="android:textSize">@dimen/fontSize36</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="fontFamily">@font/lato_black</item>
+    </style>
+
+    <style name="Image">
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="BottomNavigation">
+        <item name="itemIconTint">@color/white</item>
+        <item name="itemTextAppearanceActive">@style/LatoBlackTextAppearance</item>
+        <item name="itemTextAppearanceInactive">@style/LataRegularTextAppearance</item>
+        <item name="itemTextColor">@color/white</item>
+    </style>
+
     <style name="LatoBlackTextAppearance">
         <item name="font">@font/lato_black</item>
     </style>

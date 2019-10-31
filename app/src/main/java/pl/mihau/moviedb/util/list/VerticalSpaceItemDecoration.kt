@@ -5,7 +5,6 @@ import android.view.View
 import androidx.annotation.DimenRes
 import androidx.recyclerview.widget.RecyclerView
 
-
 class VerticalSpaceItemDecoration(@DimenRes private val spaceInDp: Int) :
     RecyclerView.ItemDecoration() {
 

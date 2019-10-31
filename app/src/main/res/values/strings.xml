@@ -9,4 +9,11 @@
     <string name="title_now_playing">Now playing</string>
     <string name="title_upcoming">Upcoming</string>
     <string name="title_popular">Popular</string>
+
+    <string name="movies">Movies</string>
+    <string name="search_hint">What are you looking for?</string>
+    <string name="search">Search</string>
+    <string name="overview">Overview</string>
+    <string name="format_money">$ %1$d</string>
+    <string name="format_rating">%1$d Ratings</string>
 </resources>

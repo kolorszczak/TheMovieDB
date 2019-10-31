@@ -1,6 +1,5 @@
 package pl.mihau.moviedb.search.viewmodel
 
-import androidx.lifecycle.SavedStateHandle
 import kotlinx.android.parcel.Parcelize
 import pl.mihau.moviedb.api.MovieDBRepository
 import pl.mihau.moviedb.common.Strings.empty
@@ -9,8 +8,6 @@ import pl.mihau.moviedb.util.state.Event
 import pl.mihau.moviedb.util.state.SideEffect
 import pl.mihau.moviedb.util.state.State
 import pl.mihau.moviedb.util.state.StatefulViewModel
-import timber.log.Timber
-
 
 class MovieSearchViewModel(private val movieDBRepository: MovieDBRepository) : StatefulViewModel<MovieSearchViewModel.SearchState, MovieSearchViewModel.SearchEvent>(SearchState.Empty) {
 
@@ -45,7 +42,7 @@ class MovieSearchViewModel(private val movieDBRepository: MovieDBRepository) : S
 
         state<SearchState.Empty> {
             on<SearchEvent.Action.Query> { transitionTo(SearchState.Loading, SideEffect.of { search(it.query) }) }
-            on<SearchEvent.Action.LoadNewPage> { transitionTo(SearchState.Loading, SideEffect.of { Timber.d("TOOO") }) }
+            on<SearchEvent.Action.LoadNewPage> { transitionTo(SearchState.Loading) }
         }
         state<SearchState.Loading> {
             on<SearchEvent.Action.Query> { dontTransition(SideEffect.of {

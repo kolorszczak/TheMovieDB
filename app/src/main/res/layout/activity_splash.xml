@@ -2,18 +2,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="pl.mihau.moviedb.splash.viewmodel.SplashViewModel" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/darkBlue"
-        android:theme="@style/SplashTheme">
+        android:background="@color/darkBlue">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineStart"
@@ -36,8 +28,7 @@
             android:gravity="center_horizontal"
             android:text="@string/app_name"
             android:textColor="@color/gold"
-            android:textSize="@dimen/fontSize22"
-            app:fontFamily="@font/lato_black"
+            style="@style/TextAppearance.H2"
             app:layout_constraintBottom_toTopOf="@id/logo"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -48,7 +39,7 @@
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="center"
+            style="@style/Image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"

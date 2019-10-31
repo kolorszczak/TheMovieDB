@@ -10,6 +10,7 @@
     <dimen name="fontSize18">18sp</dimen>
     <dimen name="fontSize22">22sp</dimen>
     <dimen name="fontSize36">36sp</dimen>
+    <dimen name="fontSize44">44sp</dimen>
 
     <dimen name="wrap_to_constraints">0dp</dimen>
     <dimen name="image_small_width">50dp</dimen>

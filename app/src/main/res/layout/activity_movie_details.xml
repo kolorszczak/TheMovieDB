@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="movie"
+            type="pl.mihau.moviedb.details.model.MovieDetails" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/darkBlue">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/margin32" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/margin32" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/posterImageView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/wrap_to_constraints"
+            android:scaleType="centerCrop"
+            app:image="@{movie.backdropPath}"
+            app:layout_constraintBottom_toTopOf="@id/topDivider"
+            app:layout_constraintDimensionRatio="16:9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
+            tools:src="@drawable/im_sample" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            style="@style/TextAppearance.H2"
+            android:layout_width="@dimen/wrap_to_constraints"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin16"
+            android:textColor="@color/gold"
+            app:label="@{movie.title}"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/posterImageView"
+            tools:text="Avengers: Endgame" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/year"
+            style="@style/TextAppearance.H3"
+            android:layout_width="@dimen/wrap_to_constraints"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin16"
+            app:label="@{movie.releaseDate}"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:text="2019" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/budget"
+            style="@style/TextAppearance.H3"
+            android:layout_width="@dimen/wrap_to_constraints"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin16"
+            app:label="@{@string/format_money(movie.budget)}"
+            app:layout_constraintStart_toEndOf="@id/year"
+            app:layout_constraintTop_toTopOf="@id/year"
+            tools:text="121 000 000 $" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/status"
+            style="@style/TextAppearance.H3"
+            android:layout_width="@dimen/wrap_to_constraints"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin16"
+            app:label="@{movie.status}"
+            app:layout_constraintStart_toEndOf="@id/budget"
+            app:layout_constraintTop_toTopOf="@id/year"
+            tools:text="Released" />
+
+        <View
+            android:id="@+id/topDivider"
+            android:layout_width="@dimen/wrap_to_constraints"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginTop="@dimen/margin8"
+            android:alpha="0.2"
+            android:background="@color/gold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/ratingsCount"
+            style="@style/TextAppearance.H3"
+            android:layout_width="@dimen/wrap_to_constraints"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin8"
+            app:label="@{@string/format_rating(movie.voteCount)}"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/topDivider"
+            tools:text="8, 000 ratings" />
+
+        <View
+            android:id="@+id/botDivider"
+            android:layout_width="@dimen/wrap_to_constraints"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginTop="@dimen/margin8"
+            android:alpha="0.2"
+            android:background="@color/gold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ratingsCount" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/overviewTitle"
+            style="@style/TextAppearance.H3"
+            android:layout_width="@dimen/wrap_to_constraints"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin8"
+            android:text="@string/overview"
+            app:fontFamily="@font/lato_black"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/botDivider" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/overview"
+            style="@style/TextAppearance.H3"
+            android:layout_width="@dimen/wrap_to_constraints"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin8"
+            android:alpha="0.75"
+            app:label="@{movie.overview}"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/overviewTitle"
+            tools:text="After the devastating events of Avengers: Infinity War, the universe is in ruins due to the oefforts of the Mad Titan, THanos. With the help of remaining allies, the Avengers must assemble once more" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

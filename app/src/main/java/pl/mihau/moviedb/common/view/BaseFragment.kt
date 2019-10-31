@@ -6,10 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import io.reactivex.disposables.CompositeDisposable
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
-import pl.mihau.moviedb.util.application.ProcessManager
-import pl.mihau.moviedb.util.permission.PermissionManager
 
 abstract class BaseFragment<T : BaseActivity> : Fragment() {
 

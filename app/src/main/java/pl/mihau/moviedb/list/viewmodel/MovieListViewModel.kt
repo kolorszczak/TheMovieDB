@@ -169,10 +169,4 @@ class MovieListViewModel(private val movieDBRepository: MovieDBRepository) : Sta
                 },
                 { invokeAction(MovieEvent.InitFailure) })
     }
-
-//    private fun getMovieDetails(id: Int) = launch {
-//        movieDBRepository.getMovieDetails(id)
-//            .subscribe({ response -> invokeAction(MovieEvent.Action.OpenDetails(response)) },
-//                { invokeAction(MovieEvent.DetailsLoadingFailure) })
-//    }
 }

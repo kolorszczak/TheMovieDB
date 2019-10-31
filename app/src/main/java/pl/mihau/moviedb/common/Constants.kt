@@ -2,6 +2,14 @@ package pl.mihau.moviedb.common
 
 import android.Manifest
 
+object Strings {
+    const val empty = ""
+}
+
+object Keys {
+    const val MOVIE = "key_MOVIE"
+}
+
 object Values {
     const val INTERCEPTOR_CONTENT_TYPE: String = "application/json;charset=utf-8"
     const val INTERCEPTOR_AUTHORIZATION: String =
