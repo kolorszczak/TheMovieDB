@@ -8,10 +8,7 @@ import pl.mihau.moviedb.util.state.SideEffect
 import pl.mihau.moviedb.util.state.State
 import pl.mihau.moviedb.util.state.StatefulViewModel
 
-class MovieDetailsViewModel(private val movieDBRepository: MovieDBRepository) :
-    StatefulViewModel<MovieDetailsViewModel.DetailsState, MovieDetailsViewModel.DetailsEvent>(
-        DetailsState.Empty
-    ) {
+class MovieDetailsViewModel(private val movieDBRepository: MovieDBRepository) : StatefulViewModel<MovieDetailsViewModel.DetailsState, MovieDetailsViewModel.DetailsEvent>(DetailsState.Empty) {
 
     sealed class DetailsState : State {
         @Parcelize object Empty : DetailsState()
@@ -31,11 +28,7 @@ class MovieDetailsViewModel(private val movieDBRepository: MovieDBRepository) :
 
     override val stateGraph = stateGraph {
         state<DetailsState.Empty> {
-            on<DetailsEvent.Action.Load> {
-                transitionTo(
-                    DetailsState.Loading,
-                    SideEffect.of { getMovieDetails(it.id) })
-            }
+            on<DetailsEvent.Action.Load> { transitionTo(DetailsState.Loading, SideEffect.of { getMovieDetails(it.id) })}
         }
         state<DetailsState.Loading> {
             on<DetailsEvent.LoadingSuccess> { transitionTo(DetailsState.DataLoaded(it.data)) }

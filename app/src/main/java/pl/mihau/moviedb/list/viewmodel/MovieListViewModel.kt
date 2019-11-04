@@ -16,24 +16,10 @@ import pl.mihau.moviedb.util.state.StatefulViewModel
 
 class MovieListViewModel(private val movieDBRepository: MovieDBRepository) : StatefulViewModel<MovieListViewModel.MovieState, MovieListViewModel.MovieEvent>(MovieState.Empty) {
 
-
-    var currentNowPlayingPage = 1
-    var totalNowPlayingPage = 0
-    var isLoadingNowPlaying = false
-
-    var currentUpcomingPage = 1
-    var totalUpcomingPage = 0
-    var isLoadingUpcoming = false
-
-    var currentPopularPage = 1
-    var totalPopularPage = 0
-    var isLoadingPopular = false
-
     sealed class MovieState : State {
         @Parcelize object Empty : MovieState()
-        @Parcelize data class Loading(val listTypes: List<MovieListType>) : MovieState()
-        @Parcelize data class PageLoaded(val listType: MovieListType, val data: List<Movie>) : MovieState()
-        @Parcelize data class DataLoaded(val data: DashboardContent) : MovieState()
+        @Parcelize object Loading : MovieState()
+        @Parcelize data class DataLoaded(val data: ListResponse<Movie>) : MovieState()
         @Parcelize object Error : MovieState()
     }
 
@@ -45,7 +31,7 @@ class MovieListViewModel(private val movieDBRepository: MovieDBRepository) : Sta
 
         sealed class Action {
             object Init : MovieEvent()
-            data class LoadMore(val listType: MovieListType) : MovieEvent()
+            data class LoadMore(val page: Int) : MovieEvent()
         }
     }
 
@@ -57,7 +43,7 @@ class MovieListViewModel(private val movieDBRepository: MovieDBRepository) : Sta
             on<MovieEvent.Action.LoadMore> { dontTransition() }
             on<MovieEvent.InitSuccess> { transitionTo(MovieState.DataLoaded(DashboardContent(it.data.nowPlaying, it.data.upcoming, it.data.popular))) }
             on<MovieEvent.InitFailure> { transitionTo(MovieState.Error) }
-            on<MovieEvent.LoadingSuccess> { transitionTo(MovieState.PageLoaded(it.listType, it.data)) }
+            on<MovieEvent.LoadingSuccess> { transitionTo(MovieState.DataLoaded(it.data)) }
             on<MovieEvent.LoadingFailure> { dontTransition() }
         }
         state<MovieState.DataLoaded> {
@@ -79,69 +65,6 @@ class MovieListViewModel(private val movieDBRepository: MovieDBRepository) : Sta
             }) }
         }
         state<MovieState.Error> {}
-    }
-
-    private fun getNowPlaying() {
-        if (!isLoadingNowPlaying || currentNowPlayingPage != 1) {
-            isLoadingNowPlaying = true
-
-            launch {
-                movieDBRepository.getNowPlaying(currentNowPlayingPage)
-                    .subscribe(
-                        { response ->
-                            totalNowPlayingPage = response.totalPages
-                            isLoadingNowPlaying = false
-                            currentNowPlayingPage++
-                            invokeAction(MovieEvent.LoadingSuccess(NOW_PLAYING, response.results))
-                        },
-                        {
-                            isLoadingNowPlaying = false
-                            invokeAction(MovieEvent.LoadingFailure(NOW_PLAYING))
-                        })
-            }
-        }
-    }
-
-    private fun getUpcoming() {
-        if (!isLoadingUpcoming || currentUpcomingPage != 1) {
-            isLoadingUpcoming = true
-
-            launch {
-                movieDBRepository.getUpcoming(currentUpcomingPage)
-                    .subscribe(
-                        { response ->
-                            totalUpcomingPage = response.totalPages
-                            isLoadingUpcoming = false
-                            currentUpcomingPage++
-                            invokeAction(MovieEvent.LoadingSuccess(UPCOMING, response.results))
-                        },
-                        {
-                            isLoadingUpcoming = false
-                            invokeAction(MovieEvent.LoadingFailure(UPCOMING))
-                        })
-            }
-        }
-    }
-
-    private fun getPopular() {
-        if (!isLoadingPopular || currentPopularPage != 1) {
-            isLoadingPopular = true
-
-            launch {
-                movieDBRepository.getPopular(currentPopularPage)
-                    .subscribe(
-                        { response ->
-                            totalPopularPage = response.totalPages
-                            isLoadingPopular = false
-                            currentPopularPage++
-                            invokeAction(MovieEvent.LoadingSuccess(POPULAR, response.results))
-                        },
-                        {
-                            isLoadingPopular = false
-                            invokeAction(MovieEvent.LoadingFailure(POPULAR))
-                        })
-            }
-        }
     }
 
     private fun getData() = launch {

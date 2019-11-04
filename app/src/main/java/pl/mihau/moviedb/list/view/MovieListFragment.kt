@@ -59,11 +59,7 @@ class MovieListFragment : BaseFragment<DashboardActivity>() {
 
     private val adapters = listOf(nowPlayingAdapter, upcomingAdapter, popularAdapter)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ) = binding.root
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
