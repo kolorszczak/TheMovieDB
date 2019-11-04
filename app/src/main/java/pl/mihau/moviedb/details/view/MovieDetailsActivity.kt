@@ -16,6 +16,7 @@ import pl.mihau.moviedb.list.model.Movie
 import pl.mihau.moviedb.util.application.FavoritesManager
 import pl.mihau.moviedb.util.databinding.contentView
 import pl.mihau.moviedb.util.extension.requiredParcelable
+import timber.log.Timber
 
 class MovieDetailsActivity : BaseActivity() {
 
@@ -57,6 +58,7 @@ class MovieDetailsActivity : BaseActivity() {
     }
 
     private fun handleError() {
+        Timber.e("Details error")
         processManager.relaunchFromStartup()
     }
 

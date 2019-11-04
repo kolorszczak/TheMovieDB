@@ -1,5 +1,6 @@
 package pl.mihau.moviedb.list.viewmodel
 
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.parcel.Parcelize
 import pl.mihau.moviedb.api.ListResponse
 import pl.mihau.moviedb.api.MovieDBRepository
@@ -49,15 +50,13 @@ class MovieListViewModel(private val movieDBRepository: MovieDBRepository) : Sta
     }
 
     private fun getData(page: Int = 1) = launch {
-        when(listType) {
+        when (listType) {
             NOW_PLAYING -> movieDBRepository.getNowPlaying(page)
             POPULAR -> movieDBRepository.getPopular(page)
             UPCOMING -> movieDBRepository.getUpcoming(page)
-        }.subscribe(
-            { response ->
-                invokeAction(MovieEvent.LoadingSuccess(response))
-            }, {
-                invokeAction(MovieEvent.LoadingFailure)
-            })
+        }.subscribeBy(
+            onError = { invokeAction(MovieEvent.LoadingFailure) },
+            onSuccess = { invokeAction(MovieEvent.LoadingSuccess(it)) }
+        )
     }
 }

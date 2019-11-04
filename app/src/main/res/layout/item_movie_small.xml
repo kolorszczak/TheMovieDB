@@ -3,16 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="movie"
+            type="pl.mihau.moviedb.list.model.Movie" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:padding="@dimen/margin4"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin4">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/posterImageView"
+            style="@style/Image"
             android:layout_width="@dimen/image_small_width"
             android:layout_height="@dimen/wrap_to_constraints"
-            style="@style/Image"
+            app:image="@{movie.posterPath}"
             app:layout_constraintDimensionRatio="2:3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -20,11 +28,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/titleTextView"
+            style="@style/TextAppearance.Title"
             android:layout_width="@dimen/wrap_to_constraints"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin4"
-            style="@style/TextAppearance.Title"
             android:textSize="@dimen/fontSize14"
+            app:label="@{movie.title}"
             app:layout_constraintEnd_toEndOf="@id/descriptionTextView"
             app:layout_constraintStart_toEndOf="@id/posterImageView"
             app:layout_constraintTop_toTopOf="parent"
@@ -32,14 +41,14 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/descriptionTextView"
+            style="@style/TextAppearance.H3"
             android:layout_width="@dimen/wrap_to_constraints"
             android:layout_height="@dimen/wrap_to_constraints"
             android:layout_marginTop="@dimen/margin4"
-            style="@style/TextAppearance.H3"
-            android:maxLines="2"
+            app:label="@{movie.overview}"
+            app:layout_constraintBottom_toBottomOf="@id/posterImageView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/titleTextView"
-            app:layout_constraintBottom_toBottomOf="@id/posterImageView"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
             tools:text="A kindhearted street urchin named Aladdin embarks on a magical adventure after find" />
     </androidx.constraintlayout.widget.ConstraintLayout>

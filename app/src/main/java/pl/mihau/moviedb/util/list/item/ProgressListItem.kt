@@ -12,8 +12,7 @@ open class ProgressListItem : AbstractItem<ProgressListItem.ViewHolder>() {
 
     override val layoutRes = R.layout.item_progress
 
-    override fun getViewHolder(v: View) =
-        ViewHolder(v)
+    override fun getViewHolder(v: View) = ViewHolder(v)
 
     class ViewHolder(view: View) : FastAdapter.ViewHolder<ProgressListItem>(view) {
         var binding: ItemProgressBinding = ItemProgressBinding.bind(view)

@@ -3,10 +3,7 @@ package pl.mihau.moviedb.details.viewmodel
 import kotlinx.android.parcel.Parcelize
 import pl.mihau.moviedb.api.MovieDBRepository
 import pl.mihau.moviedb.details.model.MovieDetails
-import pl.mihau.moviedb.util.state.Event
-import pl.mihau.moviedb.util.state.SideEffect
-import pl.mihau.moviedb.util.state.State
-import pl.mihau.moviedb.util.state.StatefulViewModel
+import pl.mihau.moviedb.util.state.*
 
 class MovieDetailsViewModel(private val movieDBRepository: MovieDBRepository) : StatefulViewModel<MovieDetailsViewModel.DetailsState, MovieDetailsViewModel.DetailsEvent>(DetailsState.Empty) {
 

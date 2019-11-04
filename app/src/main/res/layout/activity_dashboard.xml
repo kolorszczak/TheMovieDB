@@ -32,10 +32,9 @@
 
         <pl.mihau.moviedb.util.view.NonSwipeableViewPager
             android:id="@+id/viewPager"
+            style="@style/ScrollComponent"
             android:layout_width="match_parent"
             android:layout_height="@dimen/wrap_to_constraints"
-            android:overScrollMode="never"
-            android:scrollbars="none"
             app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

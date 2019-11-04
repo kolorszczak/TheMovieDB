@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
 
 abstract class StatefulViewModel<STATE : State, EVENT : Event>(
     private val initialState: STATE,
-    val handle: SavedStateHandle? = null
+    private val handle: SavedStateHandle? = null
 ) : BaseViewModel() {
 
     companion object {

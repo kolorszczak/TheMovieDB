@@ -1,7 +1,7 @@
 package pl.mihau.moviedb
 
 import android.app.Application
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import pl.mihau.moviedb.util.di.*
@@ -10,13 +10,11 @@ import timber.log.Timber
 
 class MovieDBApp : Application() {
 
-    private val activityLifecycleManager by inject<ActivityLifecycleManager>()
-
     override fun onCreate() {
         super.onCreate()
         initializeLogger()
         initializeDI()
-        registerActivityLifecycleCallbacks(activityLifecycleManager)
+        registerActivityLifecycleCallbacks(get<ActivityLifecycleManager>())
     }
 
     private fun initializeLogger() {
@@ -26,14 +24,17 @@ class MovieDBApp : Application() {
     private fun initializeDI() {
         startKoin {
             androidContext(this@MovieDBApp)
-            modules(
-                baseActivityModule,
-                viewModelModule,
-                repositoryModule,
-                rxModule,
-                restModule,
-                applicationUtilsModule
-            )
+            modules(modules)
         }
+    }
+
+    companion object {
+        val modules = listOf(
+            baseActivityModule,
+            viewModelModule,
+            repositoryModule,
+            restModule,
+            applicationUtilsModule
+        )
     }
 }

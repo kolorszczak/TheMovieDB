@@ -3,6 +3,7 @@ package pl.mihau.moviedb.api
 import io.reactivex.Single
 import pl.mihau.moviedb.details.model.MovieDetails
 import pl.mihau.moviedb.list.model.Movie
+import pl.mihau.moviedb.util.extension.schedule
 import pl.mihau.moviedb.util.provider.SchedulerProvider
 
 class MovieDBRepository(
@@ -10,33 +11,18 @@ class MovieDBRepository(
     private val schedulerProvider: SchedulerProvider
 ) {
 
-    fun getNowPlaying(page: Int = 1): Single<ListResponse<Movie>> {
-        return apiService.getNowPlaying(page)
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-    }
+    fun getNowPlaying(page: Int = 1): Single<ListResponse<Movie>> =
+        apiService.getNowPlaying(page).schedule(schedulerProvider)
 
-    fun getUpcoming(page: Int = 1): Single<ListResponse<Movie>> {
-        return apiService.getUpcoming(page)
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-    }
+    fun getUpcoming(page: Int = 1): Single<ListResponse<Movie>> =
+        apiService.getUpcoming(page).schedule(schedulerProvider)
 
-    fun getPopular(page: Int = 1): Single<ListResponse<Movie>> {
-        return apiService.getPopular(page)
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-    }
+    fun getPopular(page: Int = 1): Single<ListResponse<Movie>> =
+        apiService.getPopular(page).schedule(schedulerProvider)
 
-    fun getMovieDetails(id: Int): Single<MovieDetails> {
-        return apiService.getMovieDetails(id)
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-    }
+    fun getMovieDetails(id: Int): Single<MovieDetails> =
+        apiService.getMovieDetails(id).schedule(schedulerProvider)
 
-    fun searchMovie(phrase: String, page: Int): Single<ListResponse<Movie>> {
-        return apiService.searchMovie(phrase = phrase, page = page)
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-    }
+    fun searchMovie(phrase: String, page: Int): Single<ListResponse<Movie>> =
+        apiService.searchMovie(phrase, page).schedule(schedulerProvider)
 }

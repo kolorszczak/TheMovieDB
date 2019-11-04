@@ -4,7 +4,6 @@ import android.view.View
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import pl.mihau.moviedb.R
-import pl.mihau.moviedb.databinding.ItemProgressBinding
 import pl.mihau.moviedb.databinding.ItemProgressHorizontalBinding
 
 open class ProgressHorizontalListItem : AbstractItem<ProgressHorizontalListItem.ViewHolder>() {
@@ -13,8 +12,7 @@ open class ProgressHorizontalListItem : AbstractItem<ProgressHorizontalListItem.
 
     override val layoutRes = R.layout.item_progress_horizontal
 
-    override fun getViewHolder(v: View) =
-        ViewHolder(v)
+    override fun getViewHolder(v: View) = ViewHolder(v)
 
     class ViewHolder(view: View) : FastAdapter.ViewHolder<ProgressHorizontalListItem>(view) {
         var binding: ItemProgressHorizontalBinding = ItemProgressHorizontalBinding.bind(view)

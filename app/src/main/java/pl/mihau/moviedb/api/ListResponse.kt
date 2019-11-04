@@ -6,8 +6,8 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class ListResponse<T : Parcelable>(
-    val page: Int,
+    @SerializedName("page") val page: Int,
     @SerializedName("total_pages") val totalPages: Int,
     @SerializedName("total_results") val totalResults: Int,
-    val results: List<T>
+    @SerializedName("results") val results: List<T>
 ) : Parcelable

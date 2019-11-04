@@ -19,7 +19,7 @@ fun AppCompatTextView.bindLabel(any: Any?) {
 
 @BindingAdapter("image")
 fun AppCompatImageView.bindImage(imageUrl: String?) {
-    Glide.with(this)
+    Glide.with(context)
         .load(
             if (imageUrl != null) Values.IMAGES_PREFIX + imageUrl.substring(1)
             else R.drawable.im_empty_poster

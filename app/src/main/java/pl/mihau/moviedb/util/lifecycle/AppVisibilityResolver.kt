@@ -1,7 +1,6 @@
 package pl.mihau.moviedb.util.lifecycle
 
 import android.app.Activity
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import java.util.concurrent.atomic.AtomicInteger
@@ -13,11 +12,6 @@ class AppVisibilityResolver : ActivityLifecycleObservable {
     private var appVisibility: AppVisibility = AppVisibility.BACKGROUND
 
     private val _visibilityEvents: Subject<AppVisibility> = PublishSubject.create()
-    val visibilityEvents: Observable<AppVisibility> = _visibilityEvents
-
-    fun isAppInForeground(): Boolean {
-        return appVisibility == AppVisibility.FOREGROUND
-    }
 
     override fun onActivityStarted(activity: Activity) {
         onCountChanged(activitiesCount.getAndIncrement())

@@ -17,6 +17,7 @@ import pl.mihau.moviedb.common.view.BaseFragment
 import pl.mihau.moviedb.dashboard.view.DashboardActivity
 import pl.mihau.moviedb.databinding.FragmentMovieSearchBinding
 import pl.mihau.moviedb.details.view.MovieDetailsActivity
+import pl.mihau.moviedb.list.model.Movie
 import pl.mihau.moviedb.search.ui.item.MovieSmallListItem
 import pl.mihau.moviedb.search.viewmodel.MovieSearchViewModel
 import pl.mihau.moviedb.util.databinding.inflate
@@ -34,8 +35,7 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
 
     private val footerAdapter: ItemAdapter<ProgressListItem> = ItemAdapter()
     private val itemAdapter: ItemAdapter<MovieSmallListItem> = ItemAdapter()
-    private val adapter: GenericFastAdapter =
-        fastAdapter(itemAdapter, footerAdapter)
+    private val adapter: GenericFastAdapter = fastAdapter(itemAdapter, footerAdapter)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) = binding.root
 
@@ -46,25 +46,21 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
 
         viewModel.state.observe(this, Observer {
             when (it) {
-                MovieSearchViewModel.SearchState.Empty -> {
-                    itemAdapter.clear()
-                    footerAdapter.clear()
-                }
-                MovieSearchViewModel.SearchState.Loading -> footerAdapter.add(ProgressListItem())
-                is MovieSearchViewModel.SearchState.DataLoaded -> {
-                    footerAdapter.clear()
-                    it.data.forEach { movie -> itemAdapter.add(MovieSmallListItem(movie)) }
-                }
-                MovieSearchViewModel.SearchState.Error -> {
-                    footerAdapter.clear()
-                    error("list error")
-                }
+                MovieSearchViewModel.SearchState.Empty -> clear()
+                MovieSearchViewModel.SearchState.Loading -> setProgressVisibility(true)
+                is MovieSearchViewModel.SearchState.DataLoaded -> setupList(it.data)
+                MovieSearchViewModel.SearchState.Error -> handleError()
             }
         })
 
         setupRecyclerViews()
         setupAdapter()
         setupSearchView()
+    }
+
+    private fun setupList(data: List<Movie>) {
+        setProgressVisibility(false)
+        data.forEach { movie -> itemAdapter.add(MovieSmallListItem(movie)) }
     }
 
     private fun setupSearchView() {
@@ -126,4 +122,18 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
         }
     }
 
+    private fun clear() {
+        footerAdapter.clear()
+        itemAdapter.clear()
+    }
+
+    private fun handleError() {
+        setProgressVisibility(false)
+        error("search error")
+    }
+
+    private fun setProgressVisibility(show: Boolean) {
+        if (show) footerAdapter.add(ProgressListItem())
+        else footerAdapter.clear()
+    }
 }

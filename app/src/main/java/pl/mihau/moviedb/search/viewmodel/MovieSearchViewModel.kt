@@ -1,5 +1,6 @@
 package pl.mihau.moviedb.search.viewmodel
 
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.parcel.Parcelize
 import pl.mihau.moviedb.api.MovieDBRepository
 import pl.mihau.moviedb.list.model.Movie
@@ -51,7 +52,7 @@ class MovieSearchViewModel(private val movieDBRepository: MovieDBRepository) : S
                 clear()
                 search(it.query)
             })}
-            on<SearchEvent.Action.LoadNewPage> { transitionTo(SearchState.Loading, SideEffect.of { search(keyword, page) }) }
+            on<SearchEvent.Action.LoadNewPage> { transitionTo(SearchState.Loading, SideEffect.of { search(keyword, page + 1) }) }
         }
         state<SearchState.Error> {
             on<SearchEvent.Action.Query> { transitionTo(SearchState.Loading, SideEffect.of { search(it.query) }) }
@@ -70,12 +71,18 @@ class MovieSearchViewModel(private val movieDBRepository: MovieDBRepository) : S
 
         launch {
             movieDBRepository.searchMovie(query, currentPage)
-                .subscribe({ result ->
-                    invokeAction(
-                        if (result.results.isEmpty()) SearchEvent.Action.Clear
-                        else SearchEvent.LoadingQuerySuccess(query, result.totalPages, currentPage + 1, result.results)
-                    )
-                }, { invokeAction(SearchEvent.LoadingQueryFailure) })
+                .subscribeBy(
+                    onSuccess = { invokeAction(when {
+                        it.results.isEmpty() -> SearchEvent.Action.Clear
+                        else -> SearchEvent.LoadingQuerySuccess(
+                            keyword = query,
+                            totalPages = it.totalPages,
+                            page = it.page,
+                            data = it.results
+                        )})
+                    },
+                    onError = { invokeAction(SearchEvent.LoadingQueryFailure) }
+                )
         }
     }
 }

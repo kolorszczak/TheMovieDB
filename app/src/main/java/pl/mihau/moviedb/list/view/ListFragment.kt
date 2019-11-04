@@ -88,8 +88,8 @@ class ListFragment : BaseFragment<DashboardActivity>() {
         val favoritesManager = get<FavoritesManager>()
 
         itemAdapter.add(data.results.map { movie -> MovieListItem(movie, favoritesManager)})
+        adapter.notifyAdapterDataSetChanged()
         if (data.page == 1) scrollToTopOf()
-
 
         setupSectionViews(true)
         setProgressVisibility(false)
