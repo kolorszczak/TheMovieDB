@@ -20,26 +20,24 @@ class DashboardActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.also {
-            it.lifecycleOwner = this
-        }
+        binding.lifecycleOwner = this
 
         setupViewPager()
         setupBottomNavigationView()
     }
 
     private fun setupViewPager() {
-        viewPager.adapter = adapter
-        viewPager.offscreenPageLimit = adapter.count
+        viewPager.also {
+            it.adapter = adapter
+            it.offscreenPageLimit = adapter.count
+        }
     }
 
     private fun setupBottomNavigationView() {
-        binding.bottomNavigationView.apply {
-            setOnNavigationItemSelectedListener {
-                DashboardTab.forMenuItemId(it.itemId).let { tab ->
-                    binding.viewPager.setCurrentItem(tab.position, true)
-                    true
-                }
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener {
+            DashboardTab.forMenuItemId(it.itemId).let { tab ->
+                binding.viewPager.setCurrentItem(tab.position, true)
+                true
             }
         }
     }

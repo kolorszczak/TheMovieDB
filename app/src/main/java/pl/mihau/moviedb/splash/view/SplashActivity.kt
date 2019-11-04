@@ -22,9 +22,7 @@ class SplashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.also {
-            it.lifecycleOwner = this
-        }
+        binding.lifecycleOwner = this
 
         viewModel.state.observe(this, Observer {
             when (it) {

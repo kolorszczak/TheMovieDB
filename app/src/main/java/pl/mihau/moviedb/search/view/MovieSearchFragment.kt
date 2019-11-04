@@ -42,9 +42,7 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.also {
-            it.lifecycleOwner = this
-        }
+        binding.lifecycleOwner = this
 
         viewModel.state.observe(this, Observer {
             when (it) {

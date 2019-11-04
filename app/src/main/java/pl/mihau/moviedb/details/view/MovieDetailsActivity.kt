@@ -10,6 +10,7 @@ import pl.mihau.moviedb.R
 import pl.mihau.moviedb.common.Keys
 import pl.mihau.moviedb.common.view.BaseActivity
 import pl.mihau.moviedb.databinding.ActivityMovieDetailsBinding
+import pl.mihau.moviedb.details.model.MovieDetails
 import pl.mihau.moviedb.details.viewmodel.MovieDetailsViewModel
 import pl.mihau.moviedb.list.model.Movie
 import pl.mihau.moviedb.util.application.FavoritesManager
@@ -25,14 +26,12 @@ class MovieDetailsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.also {
-            it.lifecycleOwner = this
-        }
+        binding.lifecycleOwner = this
 
         viewModel.state.observe(this, Observer {
             when (it) {
-                is MovieDetailsViewModel.DetailsState.DataLoaded -> binding.movie = it.data
-                MovieDetailsViewModel.DetailsState.Error -> processManager.relaunchFromStartup()
+                is MovieDetailsViewModel.DetailsState.DataLoaded -> setupMovieDetails(it.data)
+                MovieDetailsViewModel.DetailsState.Error -> handleError()
             }
         })
 
@@ -49,6 +48,14 @@ class MovieDetailsActivity : BaseActivity() {
             favoritesManager.toggleFavorite(movieId)
             binding.isFavorite = favoritesManager.isFavorite(movieId)
         }
+    }
+
+    private fun setupMovieDetails(movieDetails: MovieDetails) {
+        binding.movie = movieDetails
+    }
+
+    private fun handleError() {
+        processManager.relaunchFromStartup()
     }
 
     private fun getDetails() {
