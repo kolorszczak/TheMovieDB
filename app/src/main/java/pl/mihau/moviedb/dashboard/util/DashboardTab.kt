@@ -10,36 +10,15 @@ enum class DashboardTab(
     val position: Int,
     @IdRes val menuItemId: Int) {
 
-    MOVIES(0, R.id.movies) {
-
-        override fun createFragment() = MovieListFragment()
-    },
-    SEARCH(1, R.id.search) {
-
-        override fun createFragment() = MovieSearchFragment()
-    };
+    MOVIES(0, R.id.movies) { override fun createFragment() = MovieListFragment() },
+    SEARCH(1, R.id.search) { override fun createFragment() = MovieSearchFragment() };
 
     abstract fun createFragment(): Fragment
 
     companion object {
 
-        fun forPosition(position: Int): DashboardTab {
-            for (tab: DashboardTab in values()) {
-                if (tab.position == position) {
-                    return tab
-                }
-            }
-            error("Unknown $this for position=$position")
-        }
+        fun forPosition(position: Int) = values().firstOrNull { it.position == position } ?: error("Wrong position number")
 
-        fun forMenuItemId(@IdRes menuItemId: Int): DashboardTab {
-            for (tab: DashboardTab in values()) {
-                if (tab.menuItemId == menuItemId) {
-                    return tab
-                }
-            }
-
-            error("Unknown $this for position=$menuItemId")
-        }
+        fun forMenuItemId(@IdRes menuItemId: Int) = values().firstOrNull { it.menuItemId == menuItemId } ?: error("Wrong menuItemId")
     }
 }
