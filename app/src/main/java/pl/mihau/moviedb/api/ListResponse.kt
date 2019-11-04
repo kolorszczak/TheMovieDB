@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class ListResponse<out T>(
+data class ListResponse<T : Parcelable>(
     val page: Int,
     @SerializedName("total_pages") val totalPages: Int,
     @SerializedName("total_results") val totalResults: Int,
     val results: List<T>
-) : Parcelable where T : Parcelable
+) : Parcelable
