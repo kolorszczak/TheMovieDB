@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="pl.mihau.moviedb.dashboard.view.DashboardActivity"
+            android:name=".dashboard.view.DashboardActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
