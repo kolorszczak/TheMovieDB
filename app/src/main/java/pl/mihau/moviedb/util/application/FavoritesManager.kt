@@ -10,9 +10,9 @@ class FavoritesManager(private val sharedPreferences: SharedPreferences, private
 
     fun toggleFavorite(id: Int): Boolean {
         getFavorites().let { currentFav ->
-           when {
-               currentFav.contains(id) -> currentFav.removeAt(currentFav.indexOf(id))
-               !currentFav.contains(id) -> currentFav.add(id)
+           when (id) {
+               in currentFav -> currentFav.removeAt(currentFav.indexOf(id))
+               !in currentFav -> currentFav.add(id)
            }
 
             return sharedPreferences.edit()
@@ -23,8 +23,8 @@ class FavoritesManager(private val sharedPreferences: SharedPreferences, private
 
     fun isFavorite(id: Int) = getFavorites().contains(id)
 
-    private fun getFavorites() = when {
-        sharedPreferences.getString(Keys.FAVORITES, Strings.empty).isNullOrEmpty() -> mutableListOf()
-        else ->gson.fromJson<MutableList<Int>>(sharedPreferences.getString(Keys.FAVORITES, Strings.empty), object : TypeToken<MutableList<Int>>() {}.type)
+    private fun getFavorites() = when(val hasStoredFavorites = !sharedPreferences.getString(Keys.FAVORITES, Strings.empty).isNullOrEmpty()) {
+        hasStoredFavorites -> mutableListOf()
+        else -> gson.fromJson<MutableList<Int>>(sharedPreferences.getString(Keys.FAVORITES, Strings.empty), object : TypeToken<MutableList<Int>>() {}.type)
     }
 }
