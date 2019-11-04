@@ -70,17 +70,19 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
     }
 
     private fun setupSearchView() {
-        RxSearchObservable.fromView(searchView)
-            .debounce(300, TimeUnit.MILLISECONDS)
-            .filter { text -> text.isNotEmpty() }
-            .filter { s -> s != viewModel.keyword }
-            .distinctUntilChanged()
-            .subscribe { s -> viewModel.invokeAction(MovieSearchViewModel.SearchEvent.Action.Query(s)) }
-            .let { compositeDisposable.add(it) }
+        searchView.apply {
+            RxSearchObservable.fromView(this)
+                .debounce(300, TimeUnit.MILLISECONDS)
+                .filter { text -> text.isNotEmpty() }
+                .filter { s -> (viewModel.state.value as? MovieSearchViewModel.SearchState.DataLoaded)?.keyword != s }
+                .distinctUntilChanged()
+                .subscribe { s -> viewModel.invokeAction(MovieSearchViewModel.SearchEvent.Action.Query(s)) }
+                .let { compositeDisposable.add(it) }
 
-        searchView.findViewById<View>(R.id.search_close_btn).setOnClickListener {
-            searchView.setQuery(empty, false)
-            viewModel.invokeAction(MovieSearchViewModel.SearchEvent.Action.Clear)
+            findViewById<View>(R.id.search_close_btn).setOnClickListener {
+                setQuery(empty, false)
+                viewModel.invokeAction(MovieSearchViewModel.SearchEvent.Action.Clear)
+            }
         }
     }
 
