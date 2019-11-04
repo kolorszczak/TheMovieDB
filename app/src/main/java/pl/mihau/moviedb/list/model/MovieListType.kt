@@ -1,8 +1,14 @@
 package pl.mihau.moviedb.list.model
 
-enum class MovieListType {
+import android.os.Parcelable
+import androidx.annotation.StringRes
+import kotlinx.android.parcel.Parcelize
+import pl.mihau.moviedb.R
 
-    NOW_PLAYING,
-    POPULAR,
-    UPCOMING;
+@Parcelize
+enum class MovieListType(@StringRes val screenTitleRes: Int) : Parcelable {
+
+    NOW_PLAYING(R.string.title_now_playing),
+    POPULAR(R.string.title_popular),
+    UPCOMING(R.string.title_upcoming);
 }

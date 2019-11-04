@@ -92,7 +92,20 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
             it.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
                 override fun onLoadMore(currentPage: Int) {
                     with(viewModel) {
-                        if (!isLoading && currentPage <= totalPages) {
+                        val isLoading = state.value is MovieSearchViewModel.SearchState.Loading
+
+                        var isCurrentlyDataLoaded = false
+                        var canLoadMorePages = false
+
+                        if (state.value is MovieSearchViewModel.SearchState.DataLoaded) {
+                            with(state.value as MovieSearchViewModel.SearchState.DataLoaded) {
+                                val nextPage = page + 1
+                                isCurrentlyDataLoaded = true
+                                canLoadMorePages = nextPage <= totalPages
+                            }
+                        }
+
+                        if (!isLoading && (isCurrentlyDataLoaded && canLoadMorePages)) {
                             invokeAction(MovieSearchViewModel.SearchEvent.Action.LoadNewPage)
                         }
                     }

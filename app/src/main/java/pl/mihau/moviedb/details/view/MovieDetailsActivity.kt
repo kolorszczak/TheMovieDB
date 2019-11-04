@@ -43,10 +43,12 @@ class MovieDetailsActivity : BaseActivity() {
         val movieId = intent.requiredParcelable<Movie>(Keys.MOVIE).id
         val favoritesManager = get<FavoritesManager>()
 
-        binding.isFavorite = favoritesManager.isFavorite(movieId)
-        binding.favoritesImageView.setOnClickListener {
-            favoritesManager.toggleFavorite(movieId)
-            binding.isFavorite = favoritesManager.isFavorite(movieId)
+        binding.apply {
+            isFavorite = favoritesManager.isFavorite(movieId)
+            favoritesImageView.setOnClickListener {
+                favoritesManager.toggleFavorite(movieId)
+                isFavorite = favoritesManager.isFavorite(movieId)
+            }
         }
     }
 

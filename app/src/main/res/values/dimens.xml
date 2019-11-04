@@ -15,6 +15,8 @@
     <dimen name="wrap_to_constraints">0dp</dimen>
     <dimen name="image_small_width">50dp</dimen>
     <dimen name="image_big_width">150dp</dimen>
+    <dimen name="movie_item_height">290dp</dimen>
+    <dimen name="progress_bar_size">40dp</dimen>
     <dimen name="divider_height">1dp</dimen>
     <dimen name="heart_big">48dp</dimen>
     <dimen name="heart_small">18dp</dimen>

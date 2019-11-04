@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="isFavorite"
             type="Boolean" />
+
         <variable
             name="movie"
             type="pl.mihau.moviedb.list.model.Movie" />
@@ -14,46 +16,47 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/movie_item_height">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/posterImageView"
             style="@style/Image"
             android:layout_width="@dimen/image_big_width"
             android:layout_height="@dimen/wrap_to_constraints"
+            app:image="@{movie.posterPath}"
             app:layout_constraintBottom_toTopOf="@id/titleTextView"
             app:layout_constraintDimensionRatio="2:3"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:image="@{movie.posterPath}"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_chainStyle="packed"
             tools:src="@drawable/im_sample" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="@dimen/heart_small"
-            android:src="@{isFavorite ? @drawable/ic_favorite : @drawable/ic_favorite_border}"
-            style="@style/Image"
-            app:tint="@color/white"
-            tools:src="@drawable/ic_favorite"
             android:id="@+id/favoritesImageView"
+            style="@style/Image"
+            android:layout_width="@dimen/heart_small"
+            android:layout_height="@dimen/heart_small"
             android:layout_margin="@dimen/margin8"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
             android:alpha="0.7"
-            android:layout_height="@dimen/heart_small" />
+            android:src="@{isFavorite ? @drawable/ic_favorite : @drawable/ic_favorite_border}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white"
+            tools:src="@drawable/ic_favorite" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/titleTextView"
             style="@style/TextAppearance.Title"
             android:layout_width="@dimen/wrap_to_constraints"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin16"
+            android:layout_marginTop="@dimen/margin4"
             android:textSize="@dimen/fontSize14"
+            app:label="@{movie.title}"
             app:layout_constraintBottom_toTopOf="@id/descriptionTextView"
             app:layout_constraintEnd_toEndOf="@id/posterImageView"
-            app:label="@{movie.title}"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@id/posterImageView"
             app:layout_constraintTop_toBottomOf="@id/posterImageView"
@@ -65,7 +68,6 @@
             android:layout_width="@dimen/wrap_to_constraints"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin4"
-            android:layout_marginBottom="@dimen/margin4"
             android:maxLines="2"
             app:label="@{movie.overview}"
             app:layout_constraintBottom_toBottomOf="parent"

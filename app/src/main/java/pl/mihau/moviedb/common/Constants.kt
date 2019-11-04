@@ -13,6 +13,7 @@ object Codes {
 object Keys {
     const val FAVORITES = "key_FAVORITES"
     const val MOVIE = "key_MOVIE"
+    const val LIST_TYPE = "key_LIST_TYPE"
     const val SHARED_PREFS = "key_SHARED_PREFS"
 }
 
