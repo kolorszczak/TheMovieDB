@@ -63,7 +63,11 @@ class MovieDetailsActivity : BaseActivity() {
     }
 
     private fun getDetails() {
-        viewModel.invokeAction(MovieDetailsViewModel.DetailsEvent.Action.Load(intent.requiredParcelable<Movie>(Keys.MOVIE).id))
+        if (connectivityManager.isOffline()) {
+            connectivityManager.handleOffline()
+        } else {
+            viewModel.invokeAction(MovieDetailsViewModel.DetailsEvent.Action.Load(intent.requiredParcelable<Movie>(Keys.MOVIE).id))
+        }
     }
 
     companion object {

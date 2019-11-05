@@ -70,7 +70,7 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
                 .filter { text -> text.isNotEmpty() }
                 .filter { s -> (viewModel.state.value as? MovieSearchViewModel.SearchState.DataLoaded)?.keyword != s }
                 .distinctUntilChanged()
-                .subscribe { s -> viewModel.invokeAction(MovieSearchViewModel.SearchEvent.Action.Query(s)) }
+                .subscribe { s -> query(s) }
                 .let { compositeDisposable.add(it) }
 
             findViewById<View>(R.id.search_close_btn).setOnClickListener {
@@ -101,7 +101,9 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
                             }
                         }
 
-                        if (!isLoading && (isCurrentlyDataLoaded && canLoadMorePages)) {
+                        if (parentActivity().connectivityManager.isOffline()) {
+                            parentActivity().connectivityManager.handleOffline()
+                        } else if (!isLoading && (isCurrentlyDataLoaded && canLoadMorePages)) {
                             invokeAction(MovieSearchViewModel.SearchEvent.Action.LoadNewPage)
                         }
                     }
@@ -119,6 +121,14 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
                 }
                 else -> false
             }
+        }
+    }
+
+    private fun query(query: String) {
+        if (parentActivity().connectivityManager.isOffline()) {
+            parentActivity().connectivityManager.handleOffline()
+        } else {
+            viewModel.invokeAction(MovieSearchViewModel.SearchEvent.Action.Query(query))
         }
     }
 

@@ -53,4 +53,9 @@
         <item name="android:overScrollMode">never</item>
         <item name="android:scrollbars">none</item>
     </style>
+
+    <style name="StyledAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/darkBlue</item>
+        <item name="android:textColorPrimary">@color/darkBlue</item>
+    </style>
 </resources>

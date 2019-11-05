@@ -9,6 +9,13 @@
     <string name="search_hint">What are you looking for?</string>
     <string name="search">Search</string>
     <string name="overview">Overview</string>
+
     <string name="format_money">$ %1$d</string>
     <string name="format_rating">%1$d Ratings</string>
+
+    <string name="offline_title">You are offline</string>
+    <string name="offline_message">You need to be connected to the internet in order to use The Movie DB app</string>
+    <string name="offline_button_text">Quit application</string>
+    <string name="offline_button_exit">Exit</string>
+    <string name="offline_button_restart">Restart</string>
 </resources>

@@ -21,10 +21,18 @@ class SplashActivity : BaseActivity() {
 
         binding.lifecycleOwner = this
 
-        openDashboard()
+        startApp()
     }
 
-    private fun openDashboard() = Handler().postDelayed({ startActivityWithFinish(DashboardActivity.intent(this)) }, Values.SPLASH_TIME_IN_MILLIS)
+    private fun startApp() = Handler().postDelayed({
+        when {
+            !permissionManager.hasRequiredPermissions() -> permissionManager.requestAllAppPermissions()
+            connectivityManager.isOffline() -> connectivityManager.handleOffline()
+            else -> openDashboard()
+        }
+    }, Values.SPLASH_TIME_IN_MILLIS)
+
+    private fun openDashboard() = startActivityWithFinish(DashboardActivity.intent(this))
 
     companion object {
         fun intent(context: Context) = Intent(context, SplashActivity::class.java)

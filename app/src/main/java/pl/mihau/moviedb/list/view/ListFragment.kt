@@ -80,8 +80,12 @@ class ListFragment : BaseFragment<DashboardActivity>() {
     }
 
     private fun init() {
-        viewModel.listType = listType
-        viewModel.invokeAction(MovieListViewModel.MovieEvent.Action.Init)
+        if (parentActivity().connectivityManager.isOffline()) {
+            parentActivity().connectivityManager.handleOffline()
+        } else {
+            viewModel.listType = listType
+            viewModel.invokeAction(MovieListViewModel.MovieEvent.Action.Init)
+        }
     }
 
     private fun setupList(data: ListResponse<Movie>) {
@@ -139,7 +143,9 @@ class ListFragment : BaseFragment<DashboardActivity>() {
                         }
                     }
 
-                    if (!isLoading && (isCurrentlyDataLoaded && canLoadMorePages)) {
+                    if (parentActivity().connectivityManager.isOffline()) {
+                        parentActivity().connectivityManager.handleOffline()
+                    } else if (!isLoading && (isCurrentlyDataLoaded && canLoadMorePages)) {
                         invokeAction(MovieListViewModel.MovieEvent.Action.LoadMore(nextPage))
                     }
                 }
