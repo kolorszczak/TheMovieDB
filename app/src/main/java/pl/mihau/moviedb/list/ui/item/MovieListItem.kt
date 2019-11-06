@@ -1,14 +1,15 @@
 package pl.mihau.moviedb.list.ui.item
-
 import android.view.View
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
+import org.koin.core.KoinComponent
+import org.koin.core.context.GlobalContext.get
 import pl.mihau.moviedb.R
 import pl.mihau.moviedb.databinding.ItemMovieBinding
 import pl.mihau.moviedb.list.model.Movie
 import pl.mihau.moviedb.util.application.FavoritesManager
 
-open class MovieListItem(var movie: Movie, var favoritesManager: FavoritesManager) : AbstractItem<MovieListItem.ViewHolder>() {
+open class MovieListItem(var movie: Movie, var isFavorite: Boolean) : AbstractItem<MovieListItem.ViewHolder>(), KoinComponent {
 
     override val type = R.id.item_movie
 
@@ -21,7 +22,7 @@ open class MovieListItem(var movie: Movie, var favoritesManager: FavoritesManage
 
         override fun bindView(item: MovieListItem, payloads: MutableList<Any>) {
             binding.movie = item.movie
-            binding.isFavorite = item.favoritesManager.isFavorite(item.movie.id)
+            binding.isFavorite = item.isFavorite
         }
 
         override fun unbindView(item: MovieListItem) {

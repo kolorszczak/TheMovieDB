@@ -91,7 +91,7 @@ class ListFragment : BaseFragment<DashboardActivity>() {
     private fun setupList(data: ListResponse<Movie>) {
         val favoritesManager = get<FavoritesManager>()
 
-        itemAdapter.add(data.results.map { movie -> MovieListItem(movie, favoritesManager)})
+        itemAdapter.add(data.results.map { movie -> MovieListItem(movie, favoritesManager.isFavorite(movie.id))})
         adapter.notifyAdapterDataSetChanged()
         if (data.page == 1) scrollToTopOf()
 
@@ -178,6 +178,7 @@ class ListFragment : BaseFragment<DashboardActivity>() {
 
     private fun toggleFavorite(movie: MovieListItem) {
         get<FavoritesManager>().toggleFavorite(movie.movie.id)
+        movie.isFavorite = get<FavoritesManager>().isFavorite(movie.movie.id)
         adapter.notifyAdapterDataSetChanged()
     }
 

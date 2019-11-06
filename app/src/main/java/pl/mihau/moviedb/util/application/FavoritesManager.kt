@@ -23,8 +23,5 @@ class FavoritesManager(private val sharedPreferences: SharedPreferences, private
 
     fun isFavorite(id: Int) = id in getFavorites()
 
-    private fun getFavorites() = when(val hasStoredFavorites = !sharedPreferences.getString(Keys.FAVORITES, Strings.empty).isNullOrEmpty()) {
-        hasStoredFavorites -> gson.fromJson<MutableList<Int>>(sharedPreferences.getString(Keys.FAVORITES, Strings.empty), object : TypeToken<MutableList<Int>>() {}.type)
-        else -> mutableListOf()
-    }
+    private fun getFavorites() = gson.fromJson<MutableList<Int>>(sharedPreferences.getString(Keys.FAVORITES, Strings.empty), object : TypeToken<MutableList<Int>>() {}.type) ?: mutableListOf()
 }
