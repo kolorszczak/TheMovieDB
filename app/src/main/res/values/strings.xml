@@ -15,7 +15,14 @@
 
     <string name="offline_title">You are offline</string>
     <string name="offline_message">You need to be connected to the internet in order to use The Movie DB app</string>
-    <string name="offline_button_text">Quit application</string>
-    <string name="offline_button_exit">Exit</string>
-    <string name="offline_button_restart">Restart</string>
+
+    <string name="error_title">Error occurred</string>
+    <string name="error_message">An error occurred while loading list. Please try later</string>
+
+    <string name="error_no_internet">An error occurred while loading list. Please try later</string>
+    <string name="error_no_connection">An error occurred while loading list. Please try later</string>
+
+    <string name="retry">Retry</string>
+    <string name="cancel">Cancel</string>
+    <string name="go_back">Go back</string>
 </resources>

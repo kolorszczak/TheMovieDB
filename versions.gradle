@@ -20,8 +20,7 @@ ext {
             rx       : [
                     rxjava       : '2.2.9',
                     rxandroid    : '2.1.1',
-                    rxkotlin     : '2.4.0',
-                    rxpermissions: '0.10.2'
+                    rxkotlin     : '2.4.0'
             ],
             android  : [
                     androidx         : '1.1.0',

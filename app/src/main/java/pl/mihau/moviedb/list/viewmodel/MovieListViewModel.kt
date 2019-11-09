@@ -1,7 +1,6 @@
 package pl.mihau.moviedb.list.viewmodel
 
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.parcel.Parcelize
 import pl.mihau.moviedb.api.ListResponse
 import pl.mihau.moviedb.api.MovieDBRepository
 import pl.mihau.moviedb.list.model.Movie
@@ -17,15 +16,14 @@ class MovieListViewModel(private val movieDBRepository: MovieDBRepository) : Sta
     lateinit var listType: MovieListType
 
     sealed class MovieState : State {
-        @Parcelize object Empty : MovieState()
-        @Parcelize object Loading : MovieState()
-        @Parcelize data class DataLoaded(val data: ListResponse<Movie>) : MovieState()
-        @Parcelize object Error : MovieState()
+        object Empty : MovieState()
+        object Loading : MovieState()
+        data class DataLoaded(val data: ListResponse<Movie>) : MovieState()
+        data class Error(val throwable: Throwable) : MovieState()
     }
 
     sealed class MovieEvent : Event {
-        object InitFailure : MovieEvent()
-        object LoadingFailure : MovieEvent()
+        data class LoadingFailure(val throwable: Throwable) : MovieEvent()
         data class LoadingSuccess(val data: ListResponse<Movie>) : MovieEvent()
 
         sealed class Action {
@@ -40,13 +38,14 @@ class MovieListViewModel(private val movieDBRepository: MovieDBRepository) : Sta
         }
         state<MovieState.Loading> {
             on<MovieEvent.Action.LoadMore> { dontTransition() }
-            on<MovieEvent.InitFailure> { transitionTo(MovieState.Error) }
             on<MovieEvent.LoadingSuccess> { transitionTo(MovieState.DataLoaded(it.data)) }
-            on<MovieEvent.LoadingFailure> { dontTransition() }
+            on<MovieEvent.LoadingFailure> { transitionTo(MovieState.Error(it.throwable)) }
         }
         state<MovieState.DataLoaded> {
             on<MovieEvent.Action.LoadMore> { transitionTo(MovieState.Loading, SideEffect.of { getData(data.page + 1) }) }   }
-        state<MovieState.Error> {}
+        state<MovieState.Error> {
+            on<MovieEvent.Action.Init> { transitionTo(MovieState.Loading, SideEffect.of { getData() }) }
+        }
     }
 
     private fun getData(page: Int = 1) = launch {
@@ -55,7 +54,7 @@ class MovieListViewModel(private val movieDBRepository: MovieDBRepository) : Sta
             POPULAR -> movieDBRepository.getPopular(page)
             UPCOMING -> movieDBRepository.getUpcoming(page)
         }.subscribeBy(
-            onError = { invokeAction(MovieEvent.LoadingFailure) },
+            onError = { invokeAction(MovieEvent.LoadingFailure(it)) },
             onSuccess = { invokeAction(MovieEvent.LoadingSuccess(it)) }
         )
     }

@@ -1,21 +1,24 @@
 package pl.mihau.moviedb.details.viewmodel
 
-import kotlinx.android.parcel.Parcelize
+import io.reactivex.rxkotlin.subscribeBy
 import pl.mihau.moviedb.api.MovieDBRepository
 import pl.mihau.moviedb.details.model.MovieDetails
-import pl.mihau.moviedb.util.state.*
+import pl.mihau.moviedb.util.state.Event
+import pl.mihau.moviedb.util.state.SideEffect
+import pl.mihau.moviedb.util.state.State
+import pl.mihau.moviedb.util.state.StatefulViewModel
 
 class MovieDetailsViewModel(private val movieDBRepository: MovieDBRepository) : StatefulViewModel<MovieDetailsViewModel.DetailsState, MovieDetailsViewModel.DetailsEvent>(DetailsState.Empty) {
 
     sealed class DetailsState : State {
-        @Parcelize object Empty : DetailsState()
-        @Parcelize object Loading : DetailsState()
-        @Parcelize data class DataLoaded(val data: MovieDetails) : DetailsState()
-        @Parcelize object Error : DetailsState()
+        object Empty : DetailsState()
+        object Loading : DetailsState()
+        data class DataLoaded(val data: MovieDetails) : DetailsState()
+        data class Error(val throwable: Throwable) : DetailsState()
     }
 
     sealed class DetailsEvent : Event {
-        object LoadingFailure : DetailsEvent()
+        data class LoadingFailure(val throwable: Throwable) : DetailsEvent()
         data class LoadingSuccess(val data: MovieDetails) : DetailsEvent()
 
         sealed class Action {
@@ -29,7 +32,7 @@ class MovieDetailsViewModel(private val movieDBRepository: MovieDBRepository) : 
         }
         state<DetailsState.Loading> {
             on<DetailsEvent.LoadingSuccess> { transitionTo(DetailsState.DataLoaded(it.data)) }
-            on<DetailsEvent.LoadingFailure> { transitionTo(DetailsState.Error) }
+            on<DetailsEvent.LoadingFailure> { transitionTo(DetailsState.Error(it.throwable)) }
         }
         state<DetailsState.DataLoaded> {}
         state<DetailsState.Error> {}
@@ -38,9 +41,9 @@ class MovieDetailsViewModel(private val movieDBRepository: MovieDBRepository) : 
     private fun getMovieDetails(id: Int) {
         launch {
             movieDBRepository.getMovieDetails(id)
-                .subscribe(
-                    { response -> invokeAction(DetailsEvent.LoadingSuccess(response)) },
-                    { invokeAction(DetailsEvent.LoadingFailure) })
+                .subscribeBy(
+                    onSuccess = { response -> invokeAction(DetailsEvent.LoadingSuccess(response)) },
+                    onError = { invokeAction(DetailsEvent.LoadingFailure(it)) })
         }
     }
 }

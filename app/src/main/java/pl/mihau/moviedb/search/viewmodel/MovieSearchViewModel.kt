@@ -1,7 +1,6 @@
 package pl.mihau.moviedb.search.viewmodel
 
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.parcel.Parcelize
 import pl.mihau.moviedb.api.MovieDBRepository
 import pl.mihau.moviedb.list.model.Movie
 import pl.mihau.moviedb.util.state.Event
@@ -12,14 +11,14 @@ import pl.mihau.moviedb.util.state.StatefulViewModel
 class MovieSearchViewModel(private val movieDBRepository: MovieDBRepository) : StatefulViewModel<MovieSearchViewModel.SearchState, MovieSearchViewModel.SearchEvent>(SearchState.Empty) {
 
     sealed class SearchState : State {
-        @Parcelize object Empty : SearchState()
-        @Parcelize object Loading : SearchState()
-        @Parcelize data class DataLoaded(val keyword: String, val totalPages: Int, val page: Int, val data: List<Movie>) : SearchState()
-        @Parcelize object Error : SearchState()
+        object Empty : SearchState()
+        object Loading : SearchState()
+        data class DataLoaded(val keyword: String, val totalPages: Int, val page: Int, val data: List<Movie>) : SearchState()
+        data class Error(val throwable: Throwable) : SearchState()
     }
 
     sealed class SearchEvent : Event {
-        object LoadingQueryFailure : SearchEvent()
+        data class LoadingQueryFailure(val throwable: Throwable) : SearchEvent()
         data class LoadingQuerySuccess(val keyword: String, val totalPages: Int, val page: Int, val data: List<Movie>) : SearchEvent()
 
         sealed class Action {
@@ -31,7 +30,7 @@ class MovieSearchViewModel(private val movieDBRepository: MovieDBRepository) : S
 
     override val stateGraph = stateGraph {
         globalEvents {
-            on<SearchEvent.Action.Clear> { transitionTo(SearchState.Empty, SideEffect.of { clear() }) }
+            on<SearchEvent.Action.Clear> { transitionTo(SearchState.Empty, SideEffect.of { clearDisposables() }) }
         }
 
         state<SearchState.Empty> {
@@ -40,16 +39,16 @@ class MovieSearchViewModel(private val movieDBRepository: MovieDBRepository) : S
         }
         state<SearchState.Loading> {
             on<SearchEvent.Action.Query> { dontTransition(SideEffect.of {
-                clear()
+                clearDisposables()
                 search(it.query)
             })}
             on<SearchEvent.Action.LoadNewPage> { dontTransition() }
             on<SearchEvent.LoadingQuerySuccess> { transitionTo(SearchState.DataLoaded(it.keyword, it.totalPages, it.page, it.data)) }
-            on<SearchEvent.LoadingQueryFailure> { transitionTo(SearchState.Error) }
+            on<SearchEvent.LoadingQueryFailure> { transitionTo(SearchState.Error(it.throwable)) }
         }
         state<SearchState.DataLoaded> {
             on<SearchEvent.Action.Query> { transitionTo(SearchState.Loading, SideEffect.of {
-                clear()
+                clearDisposables()
                 search(it.query)
             })}
             on<SearchEvent.Action.LoadNewPage> { transitionTo(SearchState.Loading, SideEffect.of { search(keyword, page + 1) }) }
@@ -57,10 +56,6 @@ class MovieSearchViewModel(private val movieDBRepository: MovieDBRepository) : S
         state<SearchState.Error> {
             on<SearchEvent.Action.Query> { transitionTo(SearchState.Loading, SideEffect.of { search(it.query) }) }
         }
-    }
-
-    private fun clear() {
-        clearDisposables()
     }
 
     private fun search(query: String, currentPage: Int = 1) {
@@ -81,7 +76,7 @@ class MovieSearchViewModel(private val movieDBRepository: MovieDBRepository) : S
                             data = it.results
                         )})
                     },
-                    onError = { invokeAction(SearchEvent.LoadingQueryFailure) }
+                    onError = { invokeAction(SearchEvent.LoadingQueryFailure(it)) }
                 )
         }
     }

@@ -22,7 +22,7 @@ abstract class StatefulViewModel<STATE : State, EVENT : Event>(
         private const val STATE_KEY = "STATE_KEY"
     }
 
-    private var stateMachine: StateMachine<STATE, EVENT>? = null
+    private lateinit var stateMachine: StateMachine<STATE, EVENT>
 
     private val _state = MutableLiveData<STATE>()
     val state: LiveData<STATE> = _state
@@ -56,7 +56,11 @@ abstract class StatefulViewModel<STATE : State, EVENT : Event>(
     }
 
     fun invokeAction(action: EVENT) {
-        stateMachine?.transition(action)
+        if (::stateMachine.isInitialized) {
+            stateMachine.transition(action)
+        } else {
+            error("You have to provide state machine graph")
+        }
     }
 
     inline fun <reified STATE1 : STATE, VALUE> LiveData<STATE>.bindState(
@@ -66,11 +70,10 @@ abstract class StatefulViewModel<STATE : State, EVENT : Event>(
             transformer(if (value is STATE1) value as STATE1 else null)
         }
     }
-
-    protected fun <S : Any, VALUE> LiveData<S>.bind(block: Binder<S, VALUE>.() -> BinderBuilder<S, VALUE>) =
+    fun <S : Any, VALUE> LiveData<S>.bind(block: Binder<S, VALUE>.() -> Binder.Builder<S, VALUE>) =
         Binder<S, VALUE>(this).let(block).build()
 
-    protected inner class Binder<K : Any, VALUE>(private val liveData: LiveData<K>) {
+    class Binder<K : Any, VALUE>(private val liveData: LiveData<K>) {
 
         val transformers: MutableMap<KClass<*>, Function1<*, VALUE>> = mutableMapOf()
 
@@ -79,26 +82,26 @@ abstract class StatefulViewModel<STATE : State, EVENT : Event>(
             transformers[S1::class] = transformer
         }
 
-        fun default(transformer: Function0<VALUE?>): BinderBuilder<K, VALUE> =
-            BinderBuilder(liveData, transformers, transformer)
+        fun default(transformer: Function0<VALUE?>): Builder<K, VALUE> =
+            Builder(liveData, transformers, transformer)
 
-        fun ignoreUndefined() = BinderBuilder(liveData, transformers)
-    }
+        fun ignoreUndefined() = Builder(liveData, transformers)
 
-    protected inner class BinderBuilder<S : Any, VALUE>(
-        private val liveData: LiveData<S>,
-        private val transformers: Map<KClass<*>, Function1<*, VALUE>>,
-        private val defaultTransformer: Function0<VALUE?>? = null
-    ) {
+        class Builder<S : Any, VALUE>(
+            private val liveData: LiveData<S>,
+            private val transformers: Map<KClass<*>, Function1<*, VALUE>>,
+            private val defaultTransformer: Function0<VALUE?>? = null
+        ) {
 
-        @Suppress("UNCHECKED_CAST")
-        fun build(): LiveData<VALUE> = Transformations
-            .map<S, VALUE>(liveData) { s ->
-                val transformer = transformers.getOrElse(s::class) { null } as? Function1<S, VALUE>
-                transformer
-                    ?.invoke(s)
-                    ?: defaultTransformer?.invoke()
-            }
-            .filter { (defaultTransformer == null && it != null) || defaultTransformer != null }
+            @Suppress("UNCHECKED_CAST")
+            fun build(): LiveData<VALUE> = Transformations
+                .map<S, VALUE>(liveData) { s ->
+                    val transformer = transformers.getOrElse(s::class) { null } as? Function1<S, VALUE>
+                    transformer
+                        ?.invoke(s)
+                        ?: defaultTransformer?.invoke()
+                }
+                .filter { (defaultTransformer == null && it != null) || defaultTransformer != null }
+        }
     }
 }

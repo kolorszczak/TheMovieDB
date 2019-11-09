@@ -7,7 +7,7 @@ import pl.mihau.moviedb.R
 import pl.mihau.moviedb.databinding.ItemMovieSmallBinding
 import pl.mihau.moviedb.list.model.Movie
 
-open class MovieSmallListItem(var movie: Movie) : AbstractItem<MovieSmallListItem.ViewHolder>() {
+class MovieSmallListItem(var movie: Movie) : AbstractItem<MovieSmallListItem.ViewHolder>() {
 
     override val type = R.id.item_movie_small
 

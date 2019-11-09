@@ -1,5 +1,6 @@
 package pl.mihau.moviedb.details.view
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -16,9 +17,10 @@ import pl.mihau.moviedb.list.model.Movie
 import pl.mihau.moviedb.util.application.FavoritesManager
 import pl.mihau.moviedb.util.databinding.contentView
 import pl.mihau.moviedb.util.extension.requiredParcelable
-import timber.log.Timber
 
 class MovieDetailsActivity : BaseActivity() {
+
+    private val movieId by lazy { intent.requiredParcelable<Movie>(Keys.MOVIE).id }
 
     private val binding by contentView<MovieDetailsActivity, ActivityMovieDetailsBinding>(R.layout.activity_movie_details)
 
@@ -32,16 +34,24 @@ class MovieDetailsActivity : BaseActivity() {
         viewModel.state.observe(this, Observer {
             when (it) {
                 is MovieDetailsViewModel.DetailsState.DataLoaded -> setupMovieDetails(it.data)
-                MovieDetailsViewModel.DetailsState.Error -> handleError()
+                is MovieDetailsViewModel.DetailsState.Error -> handleError(it.throwable)
             }
         })
 
+        init()
+    }
+
+    override fun finish() {
+        setResult(Activity.RESULT_OK, Intent().apply { putExtra(Keys.MOVIE_ID, movieId.toLong()) })
+        super.finish()
+    }
+
+    private fun init() {
         setupFavorite()
         getDetails()
     }
 
     private fun setupFavorite() {
-        val movieId = intent.requiredParcelable<Movie>(Keys.MOVIE).id
         val favoritesManager = get<FavoritesManager>()
 
         binding.apply {
@@ -57,20 +67,20 @@ class MovieDetailsActivity : BaseActivity() {
         binding.movie = movieDetails
     }
 
-    private fun handleError() {
-        Timber.e("Details error")
-        processManager.relaunchFromStartup()
+    private fun handleError(throwable: Throwable) {
+        dialogManager.handleError(throwable.message, getString(R.string.go_back), buttonAction = {
+            finish()
+        })
     }
 
     private fun getDetails() {
-        if (connectivityManager.isOffline()) {
-            connectivityManager.handleOffline()
-        } else {
-            viewModel.invokeAction(MovieDetailsViewModel.DetailsEvent.Action.Load(intent.requiredParcelable<Movie>(Keys.MOVIE).id))
-        }
+        viewModel.invokeAction(MovieDetailsViewModel.DetailsEvent.Action.Load(movieId))
     }
 
     companion object {
-        fun intent(context: Context, movie: Movie) = Intent(context, MovieDetailsActivity::class.java).apply { putExtra(Keys.MOVIE, movie) }
+        fun intent(context: Context, movie: Movie) = Intent(context, MovieDetailsActivity::class.java).apply {
+            putExtra(Keys.MOVIE, movie)
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
     }
 }

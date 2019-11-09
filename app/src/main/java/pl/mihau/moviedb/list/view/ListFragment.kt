@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.GenericItem
+import com.mikepenz.fastadapter.adapters.GenericItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener
@@ -32,10 +34,12 @@ import pl.mihau.moviedb.list.viewmodel.MovieListViewModel
 import pl.mihau.moviedb.util.application.FavoritesManager
 import pl.mihau.moviedb.util.databinding.inflate
 import pl.mihau.moviedb.util.extension.fastAdapter
+import pl.mihau.moviedb.util.extension.requireLong
 import pl.mihau.moviedb.util.extension.requiredParcelable
 import pl.mihau.moviedb.util.extension.setVisibility
 import pl.mihau.moviedb.util.list.HorizontalSpaceItemDecoration
-import pl.mihau.moviedb.util.list.item.ProgressHorizontalListItem
+import pl.mihau.moviedb.util.list.item.error.ErrorHorizontalListItem
+import pl.mihau.moviedb.util.list.item.progress.ProgressHorizontalListItem
 
 class ListFragment : BaseFragment<DashboardActivity>() {
 
@@ -43,8 +47,8 @@ class ListFragment : BaseFragment<DashboardActivity>() {
 
     private val viewModel by viewModel<MovieListViewModel>()
 
-    private val footerAdapter: ItemAdapter<ProgressHorizontalListItem> = ItemAdapter()
-    private val itemAdapter: ItemAdapter<MovieListItem> = ItemAdapter()
+    private val footerAdapter: GenericItemAdapter = ItemAdapter()
+    private val itemAdapter: GenericItemAdapter = ItemAdapter()
     private val adapter: GenericFastAdapter = fastAdapter(itemAdapter, footerAdapter)
 
     private val listType by lazy { arguments.requiredParcelable<MovieListType>(Keys.LIST_TYPE) }
@@ -61,31 +65,31 @@ class ListFragment : BaseFragment<DashboardActivity>() {
 
         viewModel.state.observe(this, Observer {
             when (it) {
-                is MovieListViewModel.MovieState.Loading -> setProgressVisibility(true)
+                is MovieListViewModel.MovieState.Loading -> setProgressVisibility(true, ProgressHorizontalListItem(), footerAdapter)
                 is MovieListViewModel.MovieState.DataLoaded -> setupList(it.data)
-                is MovieListViewModel.MovieState.Error -> handleError()
+                is MovieListViewModel.MovieState.Error -> handleError(it.throwable)
             }
         })
 
-        setupRecyclerViews()
-        setupPaging()
-        setupAdapters()
         init()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Codes.MOVIE_DETAILS) {
-            adapter.notifyAdapterDataSetChanged()
+            val position = adapter.getPosition(data.requireLong(Keys.MOVIE_ID))
+            val item = (adapter.getItem(position) as? MovieListItem) ?: error("Cannot find a movie you came back from")
+
+            notifyItemDataChanged(item)
         }
     }
 
     private fun init() {
-        if (parentActivity().connectivityManager.isOffline()) {
-            parentActivity().connectivityManager.handleOffline()
-        } else {
-            viewModel.listType = listType
-            viewModel.invokeAction(MovieListViewModel.MovieEvent.Action.Init)
-        }
+        setupRecyclerViews()
+        setupPaging()
+        setupAdapters()
+
+        viewModel.listType = listType
+        viewModel.invokeAction(MovieListViewModel.MovieEvent.Action.Init)
     }
 
     private fun setupList(data: ListResponse<Movie>) {
@@ -96,13 +100,16 @@ class ListFragment : BaseFragment<DashboardActivity>() {
         if (data.page == 1) scrollToTopOf()
 
         setupSectionViews(true)
-        setProgressVisibility(false)
+        setProgressVisibility(false, footerAdapter = footerAdapter)
     }
 
-    private fun handleError() {
-        setProgressVisibility(false)
-        setupSectionViews(itemAdapter.adapterItemCount == 0)
-        error("list error")
+    private fun handleError(throwable: Throwable) {
+        setProgressVisibility(false, footerAdapter = footerAdapter)
+        itemAdapter.clear()
+        itemAdapter.add(ErrorHorizontalListItem())
+        parentActivity().dialogManager.handleError(throwable.message) {
+            viewModel.invokeAction(MovieListViewModel.MovieEvent.Action.Init)
+        }
     }
 
     private fun setupSectionViews(show: Boolean) {
@@ -111,11 +118,6 @@ class ListFragment : BaseFragment<DashboardActivity>() {
     }
 
     private fun scrollToTopOf() = list.smoothScrollToPosition(0)
-
-    private fun setProgressVisibility(show: Boolean) {
-        if (show) footerAdapter.add(ProgressHorizontalListItem())
-        else footerAdapter.clear()
-    }
 
     private fun setupRecyclerViews() {
         list.also {
@@ -143,9 +145,7 @@ class ListFragment : BaseFragment<DashboardActivity>() {
                         }
                     }
 
-                    if (parentActivity().connectivityManager.isOffline()) {
-                        parentActivity().connectivityManager.handleOffline()
-                    } else if (!isLoading && (isCurrentlyDataLoaded && canLoadMorePages)) {
+                    if (!isLoading && (isCurrentlyDataLoaded && canLoadMorePages)) {
                         invokeAction(MovieListViewModel.MovieEvent.Action.LoadMore(nextPage))
                     }
                 }
@@ -158,10 +158,12 @@ class ListFragment : BaseFragment<DashboardActivity>() {
             when (item) {
                 is MovieListItem -> {
                     startActivityForResult(MovieDetailsActivity.intent(requireContext(), item.movie), Codes.MOVIE_DETAILS)
-                    true
                 }
-                else -> false
+                is ErrorHorizontalListItem -> {
+                    refreshList()
+                }
             }
+            true
         }
 
         adapter.addEventHook(object : ClickEventHook<GenericItem>() {
@@ -169,21 +171,30 @@ class ListFragment : BaseFragment<DashboardActivity>() {
                 (viewHolder as? MovieListItem.ViewHolder)?.run { this.binding.favoritesImageView }
 
             override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<GenericItem>, item: GenericItem) {
-                if (item is MovieListItem) {
-                    toggleFavorite(item)
+                when(item) {
+                    is MovieListItem -> toggleFavorite(item)
                 }
             }
         })
     }
 
+    private fun refreshList() {
+        itemAdapter.clear()
+        viewModel.invokeAction(MovieListViewModel.MovieEvent.Action.Init)
+    }
+
     private fun toggleFavorite(movie: MovieListItem) {
         get<FavoritesManager>().toggleFavorite(movie.movie.id)
+        notifyItemDataChanged(movie)
+    }
+
+    private fun notifyItemDataChanged(movie: MovieListItem) {
         movie.isFavorite = get<FavoritesManager>().isFavorite(movie.movie.id)
-        adapter.notifyAdapterDataSetChanged()
+        adapter.notifyAdapterItemChanged(itemAdapter.getAdapterPosition(movie))
     }
 
     companion object {
 
-        fun instance(listType: MovieListType) = ListFragment().apply {  arguments = Bundle().apply { putParcelable(Keys.LIST_TYPE, listType) } }
+        fun instance(listType: MovieListType) = ListFragment().apply { arguments = bundleOf(Keys.LIST_TYPE to listType) }
     }
 }

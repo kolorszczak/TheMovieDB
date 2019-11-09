@@ -11,7 +11,7 @@ android {
         applicationId "pl.mihau.moviedb"
         minSdkVersion 19
         targetSdkVersion toolVersions.android.targetSdk
-        versionCode 100
+        versionCode 1
         versionName "1.0.0"
         proguardFiles getDefaultProguardFile('proguard-android.txt'), new File("${project.projectDir}/proguard-project.txt")
         multiDexEnabled true
@@ -78,14 +78,16 @@ android {
         implementation "androidx.core:core-ktx:${libVersions.android.androidx}"
         implementation "androidx.recyclerview:recyclerview:${libVersions.android.recyclerview}"
         implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${libVersions.android.aac}"
+        implementation "androidx.lifecycle:lifecycle-common-java8:${libVersions.android.aac}"
         implementation "androidx.lifecycle:lifecycle-livedata:${libVersions.android.aac}"
+        implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:${libVersions.lifecycle.arch_saved_state}"
         implementation "com.android.support.constraint:constraint-layout:${libVersions.android.constraint_layout}"
+        implementation "android.arch.lifecycle:extensions:${libVersions.lifecycle.arch_component}"
 
         //Rx
         implementation "io.reactivex.rxjava2:rxandroid:${libVersions.rx.rxandroid}"
         implementation "io.reactivex.rxjava2:rxjava:${libVersions.rx.rxjava}"
         implementation "io.reactivex.rxjava2:rxkotlin:${libVersions.rx.rxkotlin}"
-        implementation "com.github.tbruyelle:rxpermissions:${libVersions.rx.rxpermissions}"
 
         //Helpers
         implementation "com.jakewharton.timber:timber:${libVersions.core.timber}"
@@ -105,11 +107,6 @@ android {
         implementation "com.github.bumptech.glide:glide:${libVersions.glide}"
         kapt "com.github.bumptech.glide:compiler:${libVersions.glide}"
         implementation "com.google.android.material:material:${libVersions.android.material}"
-
-        // Architectural Components
-        implementation "android.arch.lifecycle:extensions:${libVersions.lifecycle.arch_component}"
-        kapt "android.arch.lifecycle:compiler:${libVersions.lifecycle.arch_component}"
-        implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:${libVersions.lifecycle.arch_saved_state}"
 
         //Web
         implementation "com.squareup.retrofit2:retrofit:${libVersions.retrofit}"

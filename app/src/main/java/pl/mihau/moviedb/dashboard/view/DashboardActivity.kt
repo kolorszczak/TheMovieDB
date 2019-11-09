@@ -29,7 +29,8 @@ class DashboardActivity : BaseActivity() {
     private fun setupViewPager() {
         viewPager.also {
             it.adapter = adapter
-            it.offscreenPageLimit = adapter.count
+            it.offscreenPageLimit = adapter.count - 1
+            it.setSwipePagingEnabled(false)
         }
     }
 
@@ -43,6 +44,6 @@ class DashboardActivity : BaseActivity() {
     }
 
     companion object {
-        fun intent(context: Context) = Intent(context, DashboardActivity::class.java)
+        fun intent(context: Context) = Intent(context, DashboardActivity::class.java).apply { flags = Intent.FLAG_ACTIVITY_SINGLE_TOP }
     }
 }

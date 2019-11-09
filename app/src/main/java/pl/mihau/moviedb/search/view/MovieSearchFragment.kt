@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.GenericFastAdapter
+import com.mikepenz.fastadapter.adapters.GenericItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener
 import kotlinx.android.synthetic.main.fragment_movie_search.*
@@ -22,9 +23,11 @@ import pl.mihau.moviedb.search.ui.item.MovieSmallListItem
 import pl.mihau.moviedb.search.viewmodel.MovieSearchViewModel
 import pl.mihau.moviedb.util.databinding.inflate
 import pl.mihau.moviedb.util.extension.fastAdapter
+import pl.mihau.moviedb.util.extension.schedule
 import pl.mihau.moviedb.util.list.RxSearchObservable
 import pl.mihau.moviedb.util.list.VerticalSpaceItemDecoration
-import pl.mihau.moviedb.util.list.item.ProgressListItem
+import pl.mihau.moviedb.util.list.item.error.ErrorVerticalListItem
+import pl.mihau.moviedb.util.list.item.progress.ProgressVerticalListItem
 import java.util.concurrent.TimeUnit
 
 class MovieSearchFragment : BaseFragment<DashboardActivity>() {
@@ -33,8 +36,8 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
 
     private val viewModel by viewModel<MovieSearchViewModel>()
 
-    private val footerAdapter: ItemAdapter<ProgressListItem> = ItemAdapter()
-    private val itemAdapter: ItemAdapter<MovieSmallListItem> = ItemAdapter()
+    private val footerAdapter: GenericItemAdapter = ItemAdapter()
+    private val itemAdapter: GenericItemAdapter = ItemAdapter()
     private val adapter: GenericFastAdapter = fastAdapter(itemAdapter, footerAdapter)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) = binding.root
@@ -47,19 +50,23 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
         viewModel.state.observe(this, Observer {
             when (it) {
                 MovieSearchViewModel.SearchState.Empty -> clear()
-                MovieSearchViewModel.SearchState.Loading -> setProgressVisibility(true)
+                MovieSearchViewModel.SearchState.Loading -> setProgressVisibility(true, ProgressVerticalListItem(), footerAdapter)
                 is MovieSearchViewModel.SearchState.DataLoaded -> setupList(it.data)
-                MovieSearchViewModel.SearchState.Error -> handleError()
+                is MovieSearchViewModel.SearchState.Error -> handleError(it.throwable)
             }
         })
 
+        init()
+    }
+
+    private fun init() {
         setupRecyclerViews()
         setupAdapter()
         setupSearchView()
     }
 
     private fun setupList(data: List<Movie>) {
-        setProgressVisibility(false)
+        setProgressVisibility(false, footerAdapter = footerAdapter)
         data.forEach { movie -> itemAdapter.add(MovieSmallListItem(movie)) }
     }
 
@@ -70,6 +77,7 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
                 .filter { text -> text.isNotEmpty() }
                 .filter { s -> (viewModel.state.value as? MovieSearchViewModel.SearchState.DataLoaded)?.keyword != s }
                 .distinctUntilChanged()
+                .schedule(parentActivity().schedulerProvider)
                 .subscribe { s -> query(s) }
                 .let { compositeDisposable.add(it) }
 
@@ -101,9 +109,7 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
                             }
                         }
 
-                        if (parentActivity().connectivityManager.isOffline()) {
-                            parentActivity().connectivityManager.handleOffline()
-                        } else if (!isLoading && (isCurrentlyDataLoaded && canLoadMorePages)) {
+                        if (!isLoading && (isCurrentlyDataLoaded && canLoadMorePages)) {
                             invokeAction(MovieSearchViewModel.SearchEvent.Action.LoadNewPage)
                         }
                     }
@@ -115,21 +121,15 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
     private fun setupAdapter() {
         adapter.onClickListener = { _, _, item, _ ->
             when (item) {
-                is MovieSmallListItem -> {
-                    startActivity(MovieDetailsActivity.intent(requireContext(), item.movie))
-                    true
-                }
-                else -> false
+                is MovieSmallListItem -> startActivity(MovieDetailsActivity.intent(requireContext(), item.movie))
             }
+            true
         }
     }
 
     private fun query(query: String) {
-        if (parentActivity().connectivityManager.isOffline()) {
-            parentActivity().connectivityManager.handleOffline()
-        } else {
-            viewModel.invokeAction(MovieSearchViewModel.SearchEvent.Action.Query(query))
-        }
+        itemAdapter.clear()
+        viewModel.invokeAction(MovieSearchViewModel.SearchEvent.Action.Query(query))
     }
 
     private fun clear() {
@@ -137,13 +137,10 @@ class MovieSearchFragment : BaseFragment<DashboardActivity>() {
         itemAdapter.clear()
     }
 
-    private fun handleError() {
-        setProgressVisibility(false)
-        error("search error")
-    }
-
-    private fun setProgressVisibility(show: Boolean) {
-        if (show) footerAdapter.add(ProgressListItem())
-        else footerAdapter.clear()
+    private fun handleError(throwable: Throwable) {
+        setProgressVisibility(false, footerAdapter = footerAdapter)
+        itemAdapter.clear()
+        itemAdapter.add(ErrorVerticalListItem())
+        parentActivity().dialogManager.handleError(throwable.message)
     }
 }

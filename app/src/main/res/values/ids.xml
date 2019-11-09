@@ -3,4 +3,5 @@
     <item name="item_progress" type="id" />
     <item name="item_movie" type="id" />
     <item name="item_movie_small" type="id" />
+    <item name="item_error" type="id" />
 </resources>
